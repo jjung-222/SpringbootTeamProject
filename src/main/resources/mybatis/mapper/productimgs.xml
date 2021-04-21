@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycompany.webapp.dao.ProductImgsDao">
+<select id="piSelectAll" resultType="productimgs">
+	select imgno, productno, ioriginalname, isavename, imgtype
+	from productimgs
+	order by imgno desc
+</select>
+
+<insert id="pImgInsert" parameterType="productimgs">
+	insert into productimgs
+	(imgno, productno, ioriginalname, isavename, imgtype)
+	values
+	(seq_imgno.nextval, #{productno}, #{ioriginalname}, #{isavename}, #{imgtype})
+</insert>
+
+<update id="pImgUpdate" parameterType="productimgs">
+	update productimgs set 
+	ioriginalname=#{ioriginalname}, isavename=#{isavename}, imgtype=#{imgtype}
+	where imgno=#{imgno}
+</update>
+
+<delete id="pImgDelete" parameterType="int">
+	delete from productimgs where imgno=#{imgno}
+</delete>
+
+<select id="pImgSelectByPno" resultType="productimgs">
+	select imgno, productno, ioriginalname, isavename, imgtype, ipriority
+	from productimgs
+	where productno=${productno}
+</select>
+
+<select id="pImgSelectByIno" parameterType="int" resultType="productimgs">
+	select imgno, productno, ioriginalname, isavename, imgtype, ipriority
+	from productimgs
+	where imgno=${imgno}
+</select>
+
+
+<!-- pno / 리스트 -->
+</mapper>

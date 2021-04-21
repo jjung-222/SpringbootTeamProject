@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycompany.webapp.dao.LikesDao">
+
+
+<select id="SelectById" resultType="likes">
+		select userid,productno
+		from likes
+		where userid = #{userid}
+</select>
+	
+	<select id="SelectByIdandPno" resultType="likes">
+		select userid,productno
+		from likes
+		where userid = #{userid} and productno = #{productno}
+	</select>
+	
+
+
+<select id="likeSelectAll" resultType="likes">
+	select productno, userid
+	from likes
+	order by productno desc
+</select>
+
+<insert id="lInsert" parameterType="likes">
+	insert into likes 
+	(productno, userid)
+	values
+	(#{productno}, #{userid})
+</insert>
+	
+<update id="lUpdate" parameterType="likes">
+	update likes set
+	productno=#{productno}
+	where productno=#{productno}	
+</update>
+
+<delete id="LDelete" parameterType="likes">
+	delete  
+	from likes 
+	where userid = #{userid} and productno = #{productno}
+</delete>
+
+<delete id="allDelete" parameterType="string">
+	delete  
+	from likes 
+	where userid = #{userid}
+</delete>
+
+
+</mapper>

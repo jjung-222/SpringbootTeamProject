@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--xml파일을 식별할 수 있는 이름 -->
+<mapper namespace="com.mycompany.webapp.dao.CartsDao">
+	<!--select문을 식별할 수 있는 이름 -->
+
+	
+	<select id="selectByUserId" parameterType="string" resultType="cart">
+		select c.userid, c.productno, pname, pprice, ioriginalname, isavename, imgtype, cartquantity
+		from carts c, products p, productimgs pi
+		where c.userid=#{userid} and c.productno = p.productno and 
+				p.productno = pi.productno and pi.ipriority = 1
+
+	</select>
+	
+	<select id="select" parameterType="cart" resultType="cart">
+		select c.userid, c.productno, pname, pprice, ioriginalname, isavename, imgtype, cartquantity
+		from carts c, products p, productimgs pi
+		where c.userid = #{userid} and c.productno=#{productno} and c.productno = p.productno and 
+				p.productno = pi.productno and pi.ipriority = 1
+	</select>
+	
+	<insert id="insert" parameterType="cart">
+		
+		insert into carts
+		(userid, productno, cartquantity)	
+		values
+		(#{userid}, #{productno}, #{cartquantity})
+	</insert>
+
+	<update id="updateCartQuantity" parameterType="cart">
+		update carts set 
+		cartquantity=#{cartquantity}
+		where userid=#{userid} and productno=#{productno}
+	</update>
+	
+	<delete id="deleteSelectCart" parameterType="list">
+		delete from carts
+		where
+		<foreach collection="list" item="cart" separator="OR">
+			(userid=#{cart.userid} and productno=#{cart.productno})
+		</foreach> 
+		
+	</delete>
+	
+	<delete id="deleteAllByUserId" parameterType="string">
+		delete from carts
+		where userid=#{userid}
+	</delete>
+		
+	<delete id="deleteByCart" parameterType="cart">
+		delete from carts
+		where userid=#{userid} and productno=#{productno}
+	</delete>
+	
+	
+</mapper>
+
+

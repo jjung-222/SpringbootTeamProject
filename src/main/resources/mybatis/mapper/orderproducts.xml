@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--xml파일을 식별할 수 있는 이름 -->
+<mapper namespace="com.mycompany.webapp.dao.OrderProductsDao">
+	<!--select문을 식별할 수 있는 이름 -->
+
+	<select id="selectByUserId" parameterType="string" resultType="orderproduct">
+		select op.productno, o.orderno, op.oquantity, p.pname, p.pprice, pi.ioriginalname, pi.isavename, pi.imgtype, o.ostatus, o.odate
+		from orders o, orderproducts op, products p, productimgs pi
+		where o.userid=#{userid} and o.orderno = op.orderno
+			and op.productno = p.productno and p.productno = pi.productno
+			and pi.ipriority = 1
+
+	</select>
+	
+	<insert id="insert" parameterType="orderproduct">
+		
+		insert into orderproducts
+		(productno, orderno, oquantity)	
+		values
+		(#{productno}, #{orderno}, #{oquantity})
+	</insert>
+	
+	<insert id="insertByList" parameterType="list">
+		<foreach collection="list" item="orderproduct" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL" index="index">
+			into orderproducts
+				(productno, orderno, oquantity)
+			values
+				(#{orderproduct.productno}, #{orderproduct.orderno}, #{orderproduct.oquantity})
+		</foreach> 
+	
+	</insert>
+
+</mapper>
+
+

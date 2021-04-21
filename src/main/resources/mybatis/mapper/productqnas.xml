@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycompany.webapp.dao.ProductQnasDao">
+<insert id="pqnaInsert" parameterType="productqna">
+		<selectKey keyProperty="boardno" resultType="int" order="BEFORE">
+			select seq_productqna_boardno.nextval from dual
+		</selectKey>
+		
+		insert into productqnas
+		(boardno, userid, productno, btitle, bdate, bcontent, bcount, originno, grouplayer)
+		values
+		(#{boardno}, #{userid}, #{productno}, #{btitle}, sysdate, #{bcontent}, 0, #{boardno}, #{grouplayer})
+		
+	</insert>
+	
+	<select id="SelectByProductno" parameterType="pager" resultType="productqna">
+	select rnum, productno, boardno, userid, btitle, bcontent, bdate, bcount, originno, grouplayer	
+		from(	
+			select rownum as rnum, productno, boardno, userid, btitle, bcontent, bdate, bcount, originno, grouplayer					
+			from (
+					select boardno, userid, productno, btitle, bdate, bcontent, bcount, originno, grouplayer
+					from productqnas
+					where productno=#{pcategory}
+					order by boardno desc
+				 )
+			where rownum &lt;=#{endRowNo}
+			)
+	where rnum &gt;= #{startRowNo}
+	</select>
+	
+	<select id="selectByUserid" parameterType="pager" resultType="productqna">
+      select rnum, productno, boardno, userid, btitle, bcontent, bdate, bcount, originno, grouplayer	
+		from(	
+			select rownum as rnum, productno, boardno, userid, btitle, bcontent, bdate, bcount, originno, grouplayer
+			from (
+					select boardno, userid, productno, btitle, bdate, bcontent, bcount, originno, grouplayer
+					from productqnas
+					where userid=#{userid}
+					order by boardno desc
+				 )
+			where rownum &lt;=#{endRowNo}
+			)
+	where rnum &gt;= #{startRowNo}
+   </select>
+	
+	<select id="pqnacount" parameterType="int" resultType="int">
+		select count(*) from productqnas where productno=#{productno}
+	</select>
+	
+	<select id="pqnacountuser" parameterType="string" resultType="int">
+		select count(*) from productqnas where userid=#{userid}
+	</select>
+	
+	<update id="pqnaUpdate" parameterType="productqna">
+		update productqnas set
+         btitle=#{btitle},
+         bcontent=#{bcontent}
+         where boardno=#{boardno}
+	</update>
+	
+	<delete id="pqnaDelete" parameterType="int">
+		delete from productqnas where boardno=#{boardno}
+	</delete>
+	
+	<update id="pupdateBcount">
+      update productqnas set bcount=bcount+1 where boardno=#{boardno}
+   </update>
+   
+   <select id="selectByBoardno" parameterType="int" resultType="productqna">
+    select boardno, userid, productno, btitle, bdate, bcontent, bcount, originno, grouplayer
+	from productqnas
+	where boardno=#{boardno}
+   </select>
+</mapper>

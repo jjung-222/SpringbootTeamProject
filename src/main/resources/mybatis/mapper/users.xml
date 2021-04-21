@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycompany.webapp.dao.UsersDao">
+
+	
+  	
+  
+  	
+	<!-- 愿�由ъ�� ���μ���� ������ 議고������ -->
+	<select id="selectAll" resultType="user">
+		select USERID, UPASSWORD, UNAME, UZIPCODE, UADDRESS, UEMAIL, UTEL, UBIRTH, UENABLED, UJOINDATE, UAUTHORITY
+		from users
+		order by USERID desc
+	</select>
+	<!-- 愿�由ъ��媛� ������ 寃����� �� -->
+	<select id="selectbyUserid" parameterType="string" resultType="user">
+  		select USERID, UNAME, UZIPCODE, UADDRESS, UEMAIL, UTEL, UBIRTH, UENABLED, UJOINDATE, UAUTHORITY
+  	    from users
+  	    where USERID = #{userid} 
+  	</select>
+	
+	<select id="selectbyUemail" parameterType="string" resultType="user">
+  		select USERID, UPASSWORD, UNAME, UZIPCODE, UADDRESS, UEMAIL, UTEL, UBIRTH, UENABLED, UJOINDATE, UAUTHORITY
+  	    from users
+  	    where UEMAIL = #{uemail} 
+  	</select>
+  	
+  	<select id="selectbyemailandname" parameterType="string" resultType="user"> 
+  		select USERID
+  	    from users
+  	    where UEMAIL = #{uemail} and UNAME = #{uname}
+  	</select>
+
+	<select id="duplicateMaNald" parameterType="string" resultType="user"> 
+  		select USERID
+  	    from users
+  	    where UEMAIL = #{uemail} and UNAME = #{uname} and USERID=#{userid}
+  	</select>
+	<!-- ����媛��� (���� 異�媛�) -->
+	<insert id="userInsert" parameterType="user">
+		insert into users 
+		(userid, upassword, uname, uzipcode, uaddress, uemail, utel, ubirth, uenabled, ujoindate, uauthority)
+		values
+		(#{userid},#{upassword},#{uname},#{uzipcode},#{uaddress},#{uemail},#{utel},#{ubirth},#{uenabled},#{ujoindate},#{uauthority})
+	</insert>
+	<!-- �������댄������ uexit ���곗�댄�� -->
+	<update id="userStatusUpdate" parameterType="string">
+		update users set
+		UENABLED=0
+		where USERID=#{userid}
+	</update>
+	
+	<update id="userpwUpdate" parameterType="string">
+		update users set
+		UPASSWORD=#{upassword}
+		where USERID=#{userid}
+	</update>
+	
+	<!-- ������蹂� ���� ���� �� -->
+	<update id="userUpdate" parameterType="user" >
+			update users set
+			UZIPCODE=${uzipcode},
+			UADDRESS=#{uaddress},
+			UTEL=#{utel}
+			where USERID=#{userid}
+
+	</update>
+
+</mapper>

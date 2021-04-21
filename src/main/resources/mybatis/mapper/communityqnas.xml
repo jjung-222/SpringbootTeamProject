@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="euc-kr" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+				"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace는 이 xml 파일이 어떤 것이 몸체인지, 몸체의 경로를 작성해주기 위한 용도이다. 즉, 인터페이스 바인딩을 위한 것 -->
+<!-- namespace는 mapper 인터페이스가 있는 경로를 작성 -->
+<mapper namespace="com.mycompany.webapp.dao.CommunityQnasDao">
+
+<!-- sql문의 태그 id속성은 구문을 찾기 위해 사용될 수 있는 네임 스페이스 내 유일한 구분자, 인터페이스의 메서드 이름작성 -->
+<!-- resultType: 결과 반환 object, parameterType: 조회결과 object/인터페이스 메소드가 받은 타입 -->
+ <select id="selectByPage" parameterType="pager" resultType="communityqna">
+      select rnum, boardno, btitle, bcontent, userid, bdate, bcount, originno, groupord, grouplayer
+      from(
+         select rownum as rnum, boardno, btitle, bcontent, userid, bdate, bcount, originno, groupord, grouplayer
+            from (
+               select boardno, btitle, bcontent, userid, bdate, bcount, originno, groupord, grouplayer
+               from communityqnas
+               order by originno desc, boardno asc
+            )
+         where rownum &lt;=#{endRowNo}
+      )
+      where rnum &gt;= #{startRowNo}
+
+   </select>
+   
+  
+   <insert id="insert" parameterType="communityqna">
+   	 <selectKey keyProperty="boardno" resultType="int" order="BEFORE">
+         select seq_communityqnas_boardno.nextval from dual
+      </selectKey>
+      
+         insert into communityqnas
+         (boardno, btitle, bcontent, userid, bdate, bcount, originno, groupord, grouplayer)
+         values
+         (#{boardno}, #{btitle}, #{bcontent}, #{userid}, sysdate, 0, #{boardno}, #{groupord}, #{grouplayer})      
+   
+   </insert>
+   
+   <insert id="insertrepl" parameterType="communityqna">
+   	 <selectKey keyProperty="boardno" resultType="int" order="BEFORE">
+         select seq_communityqnas_boardno.nextval from dual
+      </selectKey>
+      
+         insert into communityqnas
+         (boardno, btitle, bcontent, userid, bdate, bcount, originno, groupord, grouplayer)
+         values
+         (#{boardno}, #{btitle}, #{bcontent}, #{userid}, sysdate, 0, #{originno}, #{groupord}, #{grouplayer})      
+   
+   </insert>
+   
+   <select id="selectByBoardno" parameterType="int" resultType="communityqna">
+      select boardno, btitle, bcontent, userid, bdate, bcount, originno, groupord, grouplayer
+      from communityqnas
+      where boardno=#{boardno}
+   </select>
+   
+   <select id="selectByUserid" parameterType="pager" resultType="communityqna">
+      select rnum, boardno, btitle, bcontent, userid, bdate, bcount, originno, groupord, grouplayer
+      from(
+         select rownum as rnum, boardno, btitle, bcontent, userid, bdate, bcount, originno, groupord, grouplayer
+            from (
+               select boardno, btitle, bcontent, userid, bdate, bcount, originno, groupord, grouplayer
+               from communityqnas
+                where userid=#{userid}
+               order by boardno desc
+            )
+           
+         where rownum &lt;=#{endRowNo}
+      )
+      where rnum &gt;= #{startRowNo}
+   </select>
+   
+   <select id="selectByKeyword" parameterType="map" resultType="communityqna">
+      select rnum, boardno, btitle, bcontent, userid, bdate, bcount, originno, groupord, grouplayer
+      from(
+         select rownum as rnum, boardno, btitle, bcontent, userid, bdate, bcount, originno, groupord, grouplayer
+            from (
+               select boardno, btitle, bcontent, userid, bdate, bcount, originno, groupord, grouplayer
+               from communityqnas
+				<if test="searchType == 'btitlebcontent'">
+					where btitle like '%' || #{keyword} || '%' or bcontent like '%' || #{keyword} || '%'
+				</if>
+				<if test="searchType == 'userid'">
+					where userid like '%' || #{keyword} || '%'
+				</if>
+               order by boardno desc
+            )
+           
+         where rownum &lt;=#{endRowNo}
+      )
+      where rnum &gt;= #{startRowNo}
+   </select>
+   
+   <update id="update" parameterType="communityqna">
+      update communityqnas set
+         btitle=#{btitle},
+         bcontent=#{bcontent}
+         where boardno=#{boardno}
+   </update>
+   
+   <delete id="deleteByBoardno" parameterType="int">
+      delete from communityqnas where boardno=#{boardno}
+   </delete>
+   
+   <update id="updateBcount">
+      update communityqnas set bcount=bcount+1 where boardno=#{boardno}
+   </update>
+   
+   <select id="count" resultType="int">
+      select count(*) from communityqnas
+   </select>
+   
+    <select id="countuser" resultType="int">
+      select count(*) 
+      from communityqnas
+      where userid=#{userid}
+   </select>
+   
+    <select id="countkeyword" parameterType="map" resultType="int">
+    	<if test="searchType == 'btitlebcontent'">
+    		select count(*) 
+    		from communityqnas
+    		where btitle like '%' || #{keyword} || '%' or bcontent like '%' || #{keyword} || '%'
+    	</if>
+    	<if test="searchType == 'userid'">
+    		select count(*)
+			from communityqnas
+			where userid like '%' || #{keyword} || '%'
+    	</if>
+   </select>
+	
+</mapper>

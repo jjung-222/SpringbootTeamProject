@@ -1,6 +1,8 @@
 package com.mycompany.webapp.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,22 +22,27 @@ public class OrdersService {
 		return order;
 	}
 	
-	public List<Order> getOrderList(Pager pager){
-		List<Order> orderList = ordersDao.selectByUserId(pager);
+	public List<Order> getOrderList(Pager pager, String searchType, String keyword){
+		Map<String, Object> map = new HashMap<>();
+		map.put("searchType", searchType);
+		map.put("keyword", keyword);
+		map.put("endRowNo", pager.getEndRowNo());
+		map.put("startRowNo", pager.getStartRowNo());
+		
+		List<Order> orderList = ordersDao.selectByPage(map);
 		return orderList;
 	}
 	
-	public void createOrder(Order order) {
-		ordersDao.insert(order);
-	}
 	
 	public void updateOrder(Order order) {
 		ordersDao.updateOrder(order);
 	}
 	
-	
-	public int getTotalRows(String orderid) {
-		int totalRows = ordersDao.count(orderid);
+	public int getTotalRows(String searchType, String keyword) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("searchType", searchType);
+		map.put("keyword", keyword);
+		int totalRows = ordersDao.count(map);
 		return totalRows;
 	}
 	

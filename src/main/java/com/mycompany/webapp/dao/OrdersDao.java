@@ -19,7 +19,7 @@ public interface OrdersDao {
 	public int count(Map<String, Object> map);
 	
 	//주문 정보 변경
-	public int updateOrder(Order order);
+	public Order updateOrder(Order order);
 	
 	//주문번호로 주문 조회
 	public Order selectByOrderNo(int orderno);

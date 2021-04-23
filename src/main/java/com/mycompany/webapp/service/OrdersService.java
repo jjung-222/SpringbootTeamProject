@@ -28,14 +28,14 @@ public class OrdersService {
 		map.put("keyword", keyword);
 		map.put("endRowNo", pager.getEndRowNo());
 		map.put("startRowNo", pager.getStartRowNo());
-		
 		List<Order> orderList = ordersDao.selectByPage(map);
 		return orderList;
 	}
 	
 	
-	public void updateOrder(Order order) {
-		ordersDao.updateOrder(order);
+	public Order updateOrder(Order order) {
+		Order newOrder = ordersDao.updateOrder(order);
+		return newOrder;
 	}
 	
 	public int getTotalRows(String searchType, String keyword) {

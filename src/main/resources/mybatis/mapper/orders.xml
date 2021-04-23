@@ -11,22 +11,21 @@
 				select="getOrderProduct"/>
 	</resultMap> 
 	
- 	<select id="selectByPage" parameterType="map" resultMap="orderResult">
+ 	<select id="selectByPage" parameterType="map" resultType="order">
 	      select rnum, orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
 	      from(
 	         select rownum as rnum, orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
 	            from (
 	              	select orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
 					from orders
-					<if test="keyword == ''"><!-- 검색이 없을경우 -->
-						
+					<if test="keyword == ''"><!-- 검색이 없을경우 -->						
 					</if>
 					<if test="keyword != '' and searchType=='userid'">
 						where userid like '%' || #{keyword} || '%'
 					</if>
 					
-					<if test="keyword != '' and searchType=='orderNo'">
-						where orderno like || #{keyword} || 
+					<if test="keyword != '' and searchType=='orderno'">
+						where orderno like #{keyword}
 					</if>
 	               order by odate desc
 	            )
@@ -36,44 +35,6 @@
 	      where rnum &gt;= #{startRowNo}
    </select>
 	
-<!-- 	
-	<select id="selectByPage" parameterType="pager" resultMap="orderResult"> 
-		select rnum, orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
-		from(
-		    select rownum as rnum, orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
-		    from (
-				select orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
-				from orders
-				order by odate desc
-		        )
-	    	where rownum &lt;= #{endRowNo}
-		    )
-		where rnum &gt;= #{startRowNo}	
-
-	</select>
-	 -->
-<!-- 	<select id="selectByKeyword" parameterType="pager" resultType="communityqna">
-      select rnum, orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
-      from(
-         select rownum as rnum, orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
-            from (
-              	select orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
-				from orders
-				where btitle like '%' || #{keyword} || '%' or bcontent like '%' || #{keyword} || '%'
-				<if test="keyword == ''">
-					
-				</if>
-				<if test="keyword != ''">
-					where userid like '%' || #{keyword} || '%'
-				</if>
-               order by boardno desc
-            )
-           
-         where rownum &lt;=#{endRowNo}
-      )
-      where rnum &gt;= #{startRowNo}
-   </select> -->
-	
 	<select id="getOrderProduct" resultType="orderproduct">
 		select op.productno, op.orderno, op.oquantity, p.pname, p.pprice, pi.ioriginalname, pi.isavename, pi.imgtype
 		from orderproducts op, products p, productimgs pi
@@ -81,13 +42,12 @@
 		and p.productno = pi.productno and pi.ipriority = 1
 	</select>
 
-	<select id="selectByOrderNo" parameterType="int" resultType="order">
+	<select id="selectByOrderNo" parameterType="int" resultMap="orderResult">
 		select orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
 		from orders
 		where orderno=#{orderno}
 	</select>
 	
-
 	<update id="updateOrder" parameterType="order">
 		update orders set 
 		ostatus=#{ostatus}
@@ -97,22 +57,15 @@
 	<select id="count" parameterType="map" resultType="int">
 		select count(*) from orders
 		<if test="keyword == ''"><!-- 검색이 없을경우 -->
-			
 		</if>
 		<if test="keyword != '' and searchType=='userid'">
 			where userid like '%' || #{keyword} || '%'
 		</if>
 		
-		<if test="keyword != '' and searchType=='orderNo'">
-			where orderno like || #{keyword} || 
+		<if test="keyword != '' and searchType=='orderno'">
+			where orderno like #{keyword}
 		</if>		
-		
-		<!-- if test="keyword != '' and searchType == 'userid'">
-			where userid like '%' || #{keyword} || '%'
-		</if>
-		<if test="keyword != '' and searchType == 'orderno'">
-			where orderno like '%' || #{keyword} || '%'
-		</if> -->		
+	
 	</select>
 	
 	

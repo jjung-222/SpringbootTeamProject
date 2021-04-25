@@ -7,14 +7,27 @@
 	order by boardno desc
 </select>
 
-<select id="prSelectByPno" parameterType="pager" resultType="productreviews">
-select rnum, productno, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount	
+<select id="selectByPage" parameterType="map" resultType="productreviews">
+ select rnum, productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount	
 		from(	
-			select rownum as rnum, productno, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount						
-			from (
-						select productno, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount
-						from  productreviews
-						where productno=#{pcategory}
+			select rownum as rnum, productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount						
+			from ( 
+						select p.productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount
+						from  productreviews pr, products p
+						where pr.productno = p.productno
+						<if test="keyword == ''"><!-- 검색이 없을경우 -->
+						</if>
+						<if test="keyword != '' and searchType=='userid'">
+							and userid like '%' || #{keyword} || '%'
+						</if>
+						
+						<if test="keyword != '' and searchType=='productname'">
+							and p.pname like '%' || #{keyword} || '%'
+						</if>
+						
+						<if test="keyword != '' and searchType=='titlecontent'">
+							and (btitle like '%' || #{keyword} || '%' or bcontent like '%' || #{keyword} || '%')
+						</if>
 						order by boardno desc
 					 )
 				where rownum &lt;=#{endRowNo}
@@ -22,34 +35,47 @@ select rnum, productno, boardno, userid, btitle, bcontent, bdate, borgimg, bsave
 	where rnum &gt;= #{startRowNo}
 </select>
 
-<select id="prSelectByUserId" parameterType="pager" resultType="productreviews">
-select rnum, productno, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount	
-		from(	
-			select rownum as rnum, productno, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount						
-			from (
-						select productno, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount
-						from  productreviews
-						where userid=#{userid}
-						order by boardno desc
-					 )
-				where rownum &lt;=#{endRowNo}
-			)
-	where rnum &gt;= #{startRowNo}
+<select id="selectByBno" parameterType="int" resultType="productreviews">
+	select boardno, pname, userid, products.productno, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount
+	from productreviews, products
+	where productreviews.productno = products.productno and boardno=#{boardno}
 </select>
 
-<select id="prSelectByBno" parameterType="int" resultType="productreviews">
-	select boardno, userid, productno, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount
-	from productreviews
-	where boardno=#{boardno}
+<select id="count" parameterType="map" resultType="int">	
+	select count(*) 
+	from productreviews, products
+ 	where productreviews.productno = products.productno
+	<if test="keyword == ''"><!-- 검색이 없을경우 -->
+	</if>
+	<if test="keyword != '' and searchType=='userid'">
+		and userid like '%' || #{keyword} || '%'
+	</if>
+	
+	<if test="keyword != '' and searchType=='productname'">
+		and products.pname like '%' || #{keyword} || '%'
+	</if>
+	
+	<if test="keyword != '' and searchType=='titlecontent'">
+		and (btitle like '%' || #{keyword} || '%' or bcontent like '%' || #{keyword} || '%')
+	</if>
 </select>
 
-<select id="count" parameterType="int" resultType="int">	
-	select count(*) from productreviews where productno=#{productno}
-</select>
+<update id="updateHitCount" parameterType="int">
+   update productreviews set bcount=bcount+1 where boardno=#{boardno}
+</update>
 
-<select id="countByUserId" parameterType="string" resultType="int">	
-	select count(*) from productreviews where userid=#{userid}
-</select>
+
+<delete id="deleteReview" parameterType="int">
+	delete from productreviews where boardno=#{boardno}
+</delete>
+
+<update id="prUpdate" parameterType="productreviews">	
+    update productreviews set
+ 		btitle=#{btitle}, 
+		bcontent=#{bcontent} 
+		where boardno=#{boardno}
+</update>
+
 
 <insert id="prInsert" parameterType="productreviews">
   <selectKey keyProperty="boardno" resultType="int" order="BEFORE"> 
@@ -68,21 +94,8 @@ select rnum, productno, boardno, userid, btitle, bcontent, bdate, borgimg, bsave
 	(seq_preview_boardno.nextval, #{userid}, #{productno}, #{btitle}, #{bcontent}, sysdate, #{borgimg}, #{bsaveimg}, #{bimgtype}, 0)  
   </if>
 </insert>
-
-<update id="prUpdate" parameterType="productreviews">	
-    update productreviews set
- 		btitle=#{btitle}, 
-		bcontent=#{bcontent} 
-		where boardno=#{boardno}
-</update>
-
-<update id="prUpdateCount" parameterType="int">
-   update productreviews set bcount=bcount+1 where boardno=#{boardno}
-</update>
   	
-	<delete id="prDelete" parameterType="int">
-		delete from productreviews where boardno=#{boardno}
-	</delete>
+
 	
 <select id="prUser" parameterType="int" resultType="productreviews">
 	select distinct o.userid

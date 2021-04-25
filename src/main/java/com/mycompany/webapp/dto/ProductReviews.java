@@ -8,6 +8,7 @@ public class ProductReviews {
 	private int boardno;
 	private String userid;
 	private int productno;
+	private String pname;
 	private String btitle;
 	private String bcontent;
 	private Date bdate;
@@ -41,6 +42,13 @@ public class ProductReviews {
 	}
 	public void setUserid(String userid) {
 		this.userid = userid;
+	}
+	
+	public String getPname() {
+		return pname;
+	}
+	public void setPname(String pname) {
+		this.pname = pname;
 	}
 	public int getProductno() {
 		return productno;

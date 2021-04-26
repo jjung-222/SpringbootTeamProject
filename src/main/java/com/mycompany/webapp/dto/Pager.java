@@ -19,7 +19,16 @@ public class Pager {
 	private int pcategory;
 	private String userid;
 	private String keyword;
+	private String searchType;
 	
+	public String getSearchType() {
+		return searchType;
+	}
+
+	public void setSearchType(String searchType) {
+		this.searchType = searchType;
+	}
+
 	public String getKeyword() {
 		return keyword;
 	}

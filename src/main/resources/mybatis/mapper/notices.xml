@@ -1,65 +1,57 @@
 <?xml version="1.0" encoding="euc-kr" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
-				"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mycompany.webapp.dao.NoticesDao">
- <select id="selectAll" resultType="notice">
-      select boardno, btitle, userid, bcontent, bdate, bcount
-      from notices
-      order by boardno desc
-   </select>
-     
- <select id="selectByPage" parameterType="pager" resultType="notice">
-      select rnum, boardno, btitle, bcontent, userid, bdate, bcount
-      from(
-         select rownum as rnum, boardno, btitle, bcontent, userid, bdate, bcount
-            from (
-               select boardno, btitle, bcontent, userid, bdate, bcount
-               from notices
-               order by boardno desc
-            )
-         where rownum &lt;=#{endRowNo}
-      )
-      where rnum &gt;= #{startRowNo}
 
-   </select>
-   
-   <insert id="insert" parameterType="notice">
-   	 <selectKey keyProperty="boardno" resultType="int" order="BEFORE">
-         select seq_notices_boardno.nextval from dual
-      </selectKey>
+	<select id="selectByPage" parameterType="pager" resultType="notice">
+		select rnum, boardno, btitle, bcontent, userid, bdate, bcount
+		from(
+		select rownum as rnum, boardno, btitle, bcontent, userid, bdate, bcount
+			from (
+				select boardno, btitle, bcontent, userid, bdate, bcount
+				from notices
+				order by boardno desc
+			)
+			where rownum &lt;=#{endRowNo}
+		)
+	where rnum &gt;= #{startRowNo}
+	</select>
+	
+	<select id="selectByBoardno" parameterType="int" resultType="notice">
+		select boardno, btitle, bcontent, userid, bdate, bcount
+		from notices
+		where boardno=#{boardno}
+	</select>
+	
+	<select id="count" resultType="int">
+		select count(*) from notices
+	</select>
+	
+	<insert id="insert" parameterType="notice">
+		<selectKey keyProperty="boardno" resultType="int" order="BEFORE">
+			select seq_notices_boardno.nextval from dual
+		</selectKey>
+			insert into notices
+			(boardno, btitle, bcontent, userid, bdate, bcount)
+			values
+			(#{boardno}, #{btitle}, #{bcontent}, #{userid}, sysdate, 0)      
+	</insert>
+         
+	<delete id="deleteByBoardno" parameterType="int">
+		delete from notices where boardno=#{boardno}
+	</delete>
+	
+	<update id="update" parameterType="notice">
+		update notices set
+		btitle=#{btitle},
+		bcontent=#{bcontent}
+		where boardno=#{boardno}
+	</update>
 
-         insert into notices
-         (boardno, btitle, bcontent, userid, bdate, bcount)
-         values
-         (#{boardno}, #{btitle}, #{bcontent}, #{userid}, sysdate, 0)      
-
-   </insert>
+	<update id="updateBcount">
+		update notices set bcount=bcount+1 where boardno=#{boardno}
+	</update>
    
-   <select id="selectByBoardno" parameterType="int" resultType="notice">
-      select boardno, btitle, bcontent, userid, bdate, bcount
-      from notices
-      where boardno=#{boardno}
-   </select>
-   
-   <update id="update" parameterType="notice">
-      update notices set
-         btitle=#{btitle},
-         bcontent=#{bcontent}
-         where boardno=#{boardno}
-   </update>
-   
-   <delete id="deleteByBoardno" parameterType="int">
-      delete from notices where boardno=#{boardno}
-   </delete>
-   
-   <update id="updateBcount">
-      update notices set bcount=bcount+1 where boardno=#{boardno}
-   </update>
-   
-   <select id="count" resultType="int">
-      select count(*) from notices
-   </select>
+	
 </mapper>
 
 

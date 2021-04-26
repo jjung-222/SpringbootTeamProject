@@ -10,7 +10,13 @@ public class CommunityQna {
 	private String bcontent;
 	private int bcount;
 	private int originno;
-	private int groupord;
+	private int status;
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
 	private int grouplayer;
 	
 	public int getOriginno() {
@@ -18,12 +24,6 @@ public class CommunityQna {
 	}
 	public void setOriginno(int originno) {
 		this.originno = originno;
-	}
-	public int getGroupord() {
-		return groupord;
-	}
-	public void setGroupord(int groupord) {
-		this.groupord = groupord;
 	}
 	public int getGrouplayer() {
 		return grouplayer;
@@ -71,7 +71,7 @@ public class CommunityQna {
 	@Override
 	public String toString() {
 		return "CommunityQna [boardno=" + boardno + ", userid=" + userid + ", btitle=" + btitle + ", bdate=" + bdate
-				+ ", bcontent=" + bcontent + ", bcount=" + bcount + ", originno=" + originno + ", groupord=" + groupord
+				+ ", bcontent=" + bcontent + ", bcount=" + bcount + ", originno=" + originno + ", groupord=" + status
 				+ ", grouplayer=" + grouplayer + "]";
 	}
 	

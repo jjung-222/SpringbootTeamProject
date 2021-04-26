@@ -12,10 +12,9 @@ import com.mycompany.webapp.dto.Pager;
 
 @Mapper
 public interface CommunityQnasDao {
-	public List<CommunityQna> selectByPage(Pager pager);
+	public List<CommunityQna> selectByPage(Map<String, Object> map);
 	public CommunityQna selectByBoardno(int boardno); //번호에 해당하는 board를 가져옴
 	public List<CommunityQna> selectByUserid(Pager pager);
-	public List<CommunityQna> selectByKeyword(Map<String, Object> map);
 	
 	public int insert(CommunityQna communityqna); //안에 board는 board service
 	public int insertrepl(CommunityQna communityqna);
@@ -23,8 +22,7 @@ public interface CommunityQnasDao {
 	public int updateBcount(int boardno);
 	public int deleteByBoardno(int boardno);
 
-	public int count();
+	public int count(Map<String, Object> map);
 	public int countuser(String userid);
-	public int countkeyword(Map<String, String> map);
 	
 }

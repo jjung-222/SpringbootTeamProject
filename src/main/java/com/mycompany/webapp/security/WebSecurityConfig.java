@@ -52,14 +52,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
          //권한 계층 설정
          .expressionHandler(securityExpressionHandler())
          //요청 경로 권한 설정
-         //.antMatchers(HttpMethod.POST, "/boards").hasAuthority("ROLE_USER")
-         .antMatchers(HttpMethod.POST, "/boards").hasAnyRole("USER")
-         .antMatchers(HttpMethod.PUT, "/boards").hasAnyRole("USER")
-         .antMatchers(HttpMethod.DELETE, "/boards/*").hasAnyRole("USER")
          
-         .antMatchers(HttpMethod.POST, "/products").hasAnyRole("ADMIN")
-         .antMatchers(HttpMethod.PUT, "/products").hasAnyRole("ADMIN")
-         .antMatchers(HttpMethod.DELETE, "/products/*").hasAnyRole("ADMIN")
+         //커뮤니티 qna
+         .antMatchers(HttpMethod.GET, "/community/communityqna/*").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.POST, "/community/communityqna/*").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.PUT, "/community/communityqna/*").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.DELETE, "/community/communityqna/*").hasAnyRole("ADMIN")
+         
+         //공지사항
+         .antMatchers(HttpMethod.GET, "/community/notice").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.POST, "/community/notice").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.PUT, "/community/notice").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.DELETE, "/community/notice/*").hasAnyRole("ADMIN")
+         
          //그 외
          .antMatchers("/**").permitAll();
       
@@ -73,8 +78,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
       auth.jdbcAuthentication()
            .dataSource(dataSource)
-           .usersByUsernameQuery("select userid as username, userpassword as password, userenabled as enabled from users where userid=?")
-           .authoritiesByUsernameQuery("select userid as username, userauthority as authority from users where userid=?")
+           .usersByUsernameQuery("select userid, upassword, uenabled from users where userid=?")
+           .authoritiesByUsernameQuery("select userid, uauthority from users where userid=? and uauthority='ROLE_ADMIN'")
            .passwordEncoder(new BCryptPasswordEncoder());
    }
    

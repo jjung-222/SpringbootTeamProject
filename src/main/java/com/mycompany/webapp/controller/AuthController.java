@@ -35,12 +35,12 @@ public class AuthController {
 	
 	@Autowired
 	private UsersService usersService;
-	
+		
 	
 		//// 회원리스트 - userid로 정렬
 		@GetMapping("/userList")
 	   public Map<String,Object> list(@RequestParam(defaultValue="1") int pageNo) {
-		
+			
 	      int totalRows = usersService.getCount();
 	      if(totalRows == 0) {
 	    	  totalRows = 1;
@@ -159,6 +159,13 @@ public class AuthController {
 			//인증 데이터 얻기
 			String uid = user.get("userid");
 			String upassword = user.get("upassword");
+			
+			//User useremail = new User(); //받아오기 위해 껍데기를 만들어줌
+			//useremail = usersService.getuser(uid); //껍데기에 내용을 채워넣어줌
+			//String email =useremail.getUemail(); //그 내용에서 이메일만 가져옴
+			
+			String email = usersService.getuser(uid).getUemail();
+			
 			//사용자 인증
 			UsernamePasswordAuthenticationToken upat = new UsernamePasswordAuthenticationToken(uid, upassword);
 			Authentication authentication = authenticationManager.authenticate(upat); //인증이 성공하면 authentiaction을 리턴
@@ -169,9 +176,10 @@ public class AuthController {
 			//jwt 생성
 			String jwt = JwtUtil.createToken(uid);
 			
-			Map<String, String> map = new HashMap<>();
+			Map<String, String> map = new HashMap<>(); //data.uid
 			map.put("uid", uid);
 			map.put("authToken", jwt);
+			map.put("email", email);
 			
 			return map;
 			}
@@ -197,19 +205,21 @@ public class AuthController {
 	   }
 
 	   @PostMapping("/join")
-	   public String join(@RequestBody User user) {
+	   public Map<String, String>join(@RequestBody User user) {
+
 	      logger.info(user.getUname());
 	      logger.info(user.getUauthority());
 	      //회원가입 처리
 	      String idresult = usersService.duplicateId(user.getUserid());
+	      Map<String,String> map = new HashMap<>();
 	      if(idresult.equals("success")) {            
 	      usersService.join(user);
-	      return "success";
+	     map.put("result", "success");
 	      } else {
-	         return "fail";
+	          map.put("result", "fail");
 	      }
 	      
-	      
+	      return map;
 	   }
 }
 

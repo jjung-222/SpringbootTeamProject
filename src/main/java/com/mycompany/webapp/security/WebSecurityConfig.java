@@ -52,6 +52,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
          //권한 계층 설정
          .expressionHandler(securityExpressionHandler())
          //요청 경로 권한 설정
+         .antMatchers(HttpMethod.GET, "/orders/*").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.PUT, "/orders/*").hasAnyRole("ADMIN")
+         
+         .antMatchers(HttpMethod.GET, "/auth/*").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.POST, "/auth/join/*").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.PUT, "/auth/*").hasAnyRole("ADMIN")
+         
+         
+         .antMatchers(HttpMethod.GET, "/productReview/*").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.PUT, "/productReview/*").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.DELETE, "/productReview/*").hasAnyRole("ADMIN")
+         
+         .antMatchers(HttpMethod.GET, "/product/*").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.POST, "/product/*").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.PUT, "/product/*").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.DELETE, "/product/*").hasAnyRole("ADMIN")
+         
+         .antMatchers(HttpMethod.GET, "/pqnaBoard/*").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.POST, "/pqnaBoard/*").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.PUT, "/pqnaBoard/*").hasAnyRole("ADMIN")
+         .antMatchers(HttpMethod.DELETE, "/pqnaBoard/*").hasAnyRole("ADMIN")
          
          //커뮤니티 qna
          .antMatchers(HttpMethod.GET, "/community/communityqna/*").hasAnyRole("ADMIN")

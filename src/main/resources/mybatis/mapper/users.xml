@@ -145,13 +145,10 @@
  
 	<!-- ����媛��� (���� 異�媛�) -->
 	<insert id="userInsert" parameterType="user">
-		<selectKey keyProperty="productno" resultType="int" order="BEFORE"> 
-			   		select seq_productno.nextval from dual
-		</selectKey>
 		insert into users 
-		(boardno,userid, upassword, uname, uzipcode, uaddress, uemail, utel, ubirth, uenabled, ujoindate, uauthority)
+		(userid, upassword, uname, uzipcode, uaddress, uemail, utel, ubirth, uenabled, ujoindate, uauthority)
 		values
-		(#{boardno},#{userid},#{upassword},#{uname},#{uzipcode},#{uaddress},#{uemail},#{utel},#{ubirth},#{uenabled},#{ujoindate},#{uauthority})
+		(#{userid},#{upassword},#{uname},#{uzipcode},#{uaddress},#{uemail},#{utel},#{ubirth},#{uenabled},sysdate,#{uauthority})
 	</insert>
 	<!-- �������댄������ uexit ���곗�댄�� -->
 	<update id="userStatusDisalbed" parameterType="string">

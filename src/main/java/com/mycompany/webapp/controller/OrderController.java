@@ -34,7 +34,6 @@ public class OrderController {
 
 		int totalRows = ordersService.getTotalRows(searchType, keyword);
 		Pager pager = new Pager(10, 5, totalRows, pageNo);
-		logger.info(searchType + " " + keyword + " total" + totalRows);
 		List<Order> orderList = ordersService.getOrderList(pager,searchType, keyword);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("pager", pager);

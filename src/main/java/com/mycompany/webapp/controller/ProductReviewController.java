@@ -92,5 +92,12 @@ public class ProductReviewController {
 	   
 	   return list;
    }
+   
+   @GetMapping("/reviewTotalRows")
+   public int reviewTotalRows() {
+	   int totalRows = productReviewsService.getTotalRows(null, null);
+	   logger.info(""+totalRows);
+	   return totalRows;
+   }
 	
 }

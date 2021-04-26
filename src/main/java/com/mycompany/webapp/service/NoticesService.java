@@ -13,46 +13,37 @@ import com.mycompany.webapp.dto.Pager;
 
 @Service
 public class NoticesService {
-	private static final Logger logger = 
-			LoggerFactory.getLogger(NoticesService.class);
 	@Autowired
 	private NoticesDao noticesDao;
 	
-	public List<Notice> getBoardList() {
-		List<Notice> list = noticesDao.selectAll();
-		return list;
-	}
-	
-	public List<Notice> getBoardList(Pager pager) {
-		List<Notice> list = noticesDao.selectByPage(pager);
-		return list;
+	public List<Notice> getList(Pager pager) {	
+		return noticesDao.selectByPage(pager);
 	}	
 	
-	public void saveBoard(Notice notice) {
-		logger.info("저장전 bno:"+ notice.getBoardno());
-		noticesDao.insert(notice);
-		logger.info("저장 후 bno:" + notice.getBoardno());
+	public int getCount() {
+		return noticesDao.count();
 	}
 
-	public Notice getBoard(int boardno) {
+	public Notice getNotice(int boardno) {
 		Notice notice = noticesDao.selectByBoardno(boardno);
 		return notice;
 	}
 	
-	public void updateBoard(Notice notice) {
-		noticesDao.update(notice);
-	}
-	
-	public void deleteBoard(int boardno) {
-		noticesDao.deleteByBoardno(boardno);
-	}
-	
-	public void addHitcount(int boardno) {
-		noticesDao.updateBcount(boardno);
+	public int insert(Notice notice) {
+		return noticesDao.insert(notice);
 	}
 
-	public int getTotalRows() {
-		int rows = noticesDao.count();
-		return rows;
+	public int delete(int boardno) {
+		return noticesDao.deleteByBoardno(boardno);
 	}
+	
+	public int update(Notice notice) {
+		return noticesDao.update(notice);
+	}
+	
+	public int addHitcount(int boardno) {
+		return noticesDao.updateBcount(boardno);
+	}
+
+	
 }

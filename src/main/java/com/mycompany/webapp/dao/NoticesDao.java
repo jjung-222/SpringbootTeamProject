@@ -9,12 +9,12 @@ import com.mycompany.webapp.dto.Pager;
 
 @Mapper
 public interface NoticesDao {
-	public List<Notice> selectAll();
 	public List<Notice> selectByPage(Pager pager);
+	public int count();	
+	public Notice selectByBoardno(int boardno);	
 	public int insert(Notice notice); //안에 board는 board service
-	public Notice selectByBoardno(int boardno);
-	public int update(Notice notice);
 	public int deleteByBoardno(int boardno);
+	public int update(Notice notice);
 	public int updateBcount(int boardno);
-	public int count();
+
 }

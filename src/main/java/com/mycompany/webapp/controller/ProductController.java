@@ -76,6 +76,7 @@ public class ProductController{
     	  imglist.add(productImgs2);
       }else {
     	  ProductImgs productimg = new ProductImgs("null", "null", "null", 0);
+    	  productimg.setProductno(product.getProductno());
     	  imglist.add(productimg);
       }
       if(product.getPattach3() != null && !product.getPattach3().isEmpty()) {
@@ -84,6 +85,7 @@ public class ProductController{
     	  imglist.add(productImgs3);
       }else {
     	  ProductImgs productimg = new ProductImgs("null", "null", "null", 0);
+    	  productimg.setProductno(product.getProductno());  
     	  imglist.add(productimg);
       }
       if(product.getPattach4() != null && !product.getPattach4().isEmpty()) {
@@ -92,6 +94,7 @@ public class ProductController{
     	  imglist.add(productImgs4);
       }else {
     	  ProductImgs productimg = new ProductImgs("null", "null", "null", 0);
+    	  productimg.setProductno(product.getProductno()); 
     	  imglist.add(productimg);
       }
       if(product.getPattach5() != null && !product.getPattach5().isEmpty()) {
@@ -100,6 +103,7 @@ public class ProductController{
     	  imglist.add(productImgs5); 
       }else {
     	  ProductImgs productimg = new ProductImgs("null", "null", "null", 0);
+    	  productimg.setProductno(product.getProductno()); 
     	  imglist.add(productimg);
       }
                 
@@ -161,22 +165,24 @@ public class ProductController{
    public void imgdownload(@PathVariable int imgno, HttpServletResponse response) {
       try {
     	 ProductImgs productimgs = productImgsService.pImgSelectByIno(imgno);
-         String battachoname = productimgs.getIoriginalname();
-         if(battachoname == null) return;
-         battachoname = new String(battachoname.getBytes("UTF-8"),"ISO-8859-1");
-         String battachsname = productimgs.getIsavename();      
-         String battachspath = "C:/team5_spring_img/image/" + battachsname;
-         String battachtype = productimgs.getImgtype();
-   
-         response.setHeader("Content-Disposition", "attachment; filename=\""+battachoname+"\";");
-         response.setContentType(battachtype);
-
-         InputStream is = new FileInputStream(battachspath);
-         OutputStream os = response.getOutputStream();
-         FileCopyUtils.copy(is, os);
-         is.close();
-         os.flush();
-         os.close();
+    	 if(!productimgs.getIoriginalname().equals("null")) {
+	         String battachoname = productimgs.getIoriginalname();
+	         if(battachoname == null) return;
+	         battachoname = new String(battachoname.getBytes("UTF-8"),"ISO-8859-1");
+	         String battachsname = productimgs.getIsavename();      
+	         String battachspath = "C:/team5_spring_img/image/" + battachsname;
+	         String battachtype = productimgs.getImgtype();
+	   
+	         response.setHeader("Content-Disposition", "attachment; filename=\""+battachoname+"\";");
+	         response.setContentType(battachtype);
+	
+	         InputStream is = new FileInputStream(battachspath);
+	         OutputStream os = response.getOutputStream();
+	         FileCopyUtils.copy(is, os);
+	         is.close();
+	         os.flush();
+	         os.close();
+    	 }
       } catch (Exception e) {
          e.printStackTrace();
       }
@@ -197,31 +203,41 @@ public class ProductController{
           }
        } 
 	  productService.pUpdate(product);
+	  
       List<ProductImgs> imglist = new ArrayList<ProductImgs>();
       if(product.getPattach2() != null && !product.getPattach2().isEmpty()) {
-    	  ProductImgs productImgs2 = new ProductImgs(product.getPattach2());
-    	  productImgs2.setIpriority(1);  
-    	  productImgs2.setImgno(product.getImgno1());
+    	  ProductImgs productImgs2 = productImgsService.pImgSelectByIno(product.getImgno1());
+    	  productImgs2.setPattach(product.getPattach2());
     	  imglist.add(productImgs2);
+      }else {
+    	  ProductImgs productimg = productImgsService.pImgSelectByIno(product.getImgno1());
+    	  imglist.add(productimg);
       }
       if(product.getPattach3() != null && !product.getPattach3().isEmpty()) {
-    	  ProductImgs productImgs3 = new ProductImgs(product.getPattach3());
-    	  productImgs3.setIpriority(0);
-    	  productImgs3.setImgno(product.getImgno2());
+    	  ProductImgs productImgs3 = productImgsService.pImgSelectByIno(product.getImgno2());
+    	  productImgs3.setPattach(product.getPattach3());
     	  imglist.add(productImgs3);
+      }else {
+    	  ProductImgs productimg = productImgsService.pImgSelectByIno(product.getImgno2());
+    	  imglist.add(productimg);
       }
       if(product.getPattach4() != null && !product.getPattach4().isEmpty()) {
-    	  ProductImgs productImgs4 = new ProductImgs(product.getPattach4());
-    	  productImgs4.setIpriority(0); 
-    	  productImgs4.setImgno(product.getImgno3());
+    	  ProductImgs productImgs4 = productImgsService.pImgSelectByIno(product.getImgno3());
+    	  productImgs4.setPattach(product.getPattach4());
     	  imglist.add(productImgs4);
+      }else {
+    	  ProductImgs productimg = productImgsService.pImgSelectByIno(product.getImgno3());
+    	  imglist.add(productimg);
       }
       if(product.getPattach5() != null && !product.getPattach5().isEmpty()) {
-    	  ProductImgs productImgs5 = new ProductImgs(product.getPattach5());
-    	  productImgs5.setIpriority(0);    
-    	  productImgs5.setImgno(product.getImgno4());
+    	  ProductImgs productImgs5 = productImgsService.pImgSelectByIno(product.getImgno4());
+    	  productImgs5.setPattach(product.getPattach5());
     	  imglist.add(productImgs5); 
-      }  
+      }else {
+    	  ProductImgs productimg = productImgsService.pImgSelectByIno(product.getImgno4());
+    	  imglist.add(productimg);
+      }
+      
       for(int i=0; i<imglist.size(); i++) {
           if(imglist.get(i).getPattach() != null && !imglist.get(i).getPattach().isEmpty()) {
               MultipartFile mf = imglist.get(i).getPattach();

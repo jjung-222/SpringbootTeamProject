@@ -11,22 +11,29 @@
 				select="getOrderProduct"/>
 	</resultMap> 
 	
-	
-	<select id="selectByUserId" parameterType="pager" resultMap="orderResult"> 
-		select rnum, orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
-		from(
-		    select rownum as rnum, orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
-		    from (
-				select orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
-				from orders
-				where userid=#{userid}
-				order by odate desc
-		        )
-	    	where rownum &lt;= #{endRowNo}
-		    )
-		where rnum &gt;= #{startRowNo}	
-
-	</select>	
+ 	<select id="selectByPage" parameterType="map" resultType="order">
+	      select rnum, orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
+	      from(
+	         select rownum as rnum, orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
+	            from (
+	              	select orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
+					from orders
+					<if test="keyword == ''"><!-- 검색이 없을경우 -->						
+					</if>
+					<if test="keyword != '' and searchType=='userid'">
+						where userid like '%' || #{keyword} || '%'
+					</if>
+					
+					<if test="keyword != '' and searchType=='orderno'">
+						where orderno like #{keyword}
+					</if>
+	               order by odate desc
+	            )
+	           
+	         where rownum &lt;=#{endRowNo}
+	      )
+	      where rnum &gt;= #{startRowNo}
+   </select>
 	
 	<select id="getOrderProduct" resultType="orderproduct">
 		select op.productno, op.orderno, op.oquantity, p.pname, p.pprice, pi.ioriginalname, pi.isavename, pi.imgtype
@@ -35,22 +42,11 @@
 		and p.productno = pi.productno and pi.ipriority = 1
 	</select>
 
-	<select id="selectByOrderNo" parameterType="int" resultType="order">
+	<select id="selectByOrderNo" parameterType="int" resultMap="orderResult">
 		select orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
 		from orders
 		where orderno=#{orderno}
 	</select>
-	
-	<insert id="insert" parameterType="order">
-		<selectKey keyProperty="orderno" resultType="int" order="BEFORE">
-			select seq_ordersno.nextval from dual
-		</selectKey>
-		
-		insert into orders
-		(orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber)	
-		values
-		(#{orderno}, #{userid}, #{oaddress}, #{oreceiver}, #{omessage}, #{omethod}, sysdate, #{ostatus}, #{ozipcode}, #{onumber})
-	</insert>
 	
 	<update id="updateOrder" parameterType="order">
 		update orders set 
@@ -58,10 +54,21 @@
 		where orderno=#{orderno}
 	</update>
 	
-	<select id="count" parameterType="string" resultType="int">
-		select count(*) from orders 
-		where userid=#{userid}
+	<select id="count" parameterType="map" resultType="int">
+		select count(*) from orders
+		<if test="keyword == ''"><!-- 검색이 없을경우 -->
+		</if>
+		<if test="keyword != '' and searchType=='userid'">
+			where userid like '%' || #{keyword} || '%'
+		</if>
+		
+		<if test="keyword != '' and searchType=='orderno'">
+			where orderno like #{keyword}
+		</if>		
+	
 	</select>
+	
+	
 </mapper>
 
 

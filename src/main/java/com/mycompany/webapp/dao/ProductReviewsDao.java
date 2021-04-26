@@ -12,6 +12,8 @@ import com.mycompany.webapp.dto.ProductReviews;
 public interface ProductReviewsDao {
 	public List<ProductReviews> selectByPage(Map<String, Object> map);
 	
+	public List<ProductReviews> selectByBest();
+	
 	
 	public ProductReviews selectByBno(int boardno);
 	

@@ -25,6 +25,13 @@ public class ProductReviewsService {
 		List<ProductReviews> list = productReviewsDao.selectByPage(map);
 		return list;
 	}
+	
+	public List<ProductReviews> getBestReview(){
+		List<ProductReviews> list = productReviewsDao.selectByBest();
+		return list;
+	}
+	
+	
 
 	public ProductReviews getReview(int boardno) {
 		ProductReviews productreviews = productReviewsDao.selectByBno(boardno);

@@ -54,4 +54,11 @@ public class OrderController {
 		return newOrder;
 		
 	}
+	
+	@GetMapping("/orderTotalRows")
+	   public int orderTotalRows() {
+		   int totalRows = ordersService.getTotalRows(null, null);
+		   
+		   return totalRows;
+	   }
 }

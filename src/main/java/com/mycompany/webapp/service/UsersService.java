@@ -1,6 +1,7 @@
 package com.mycompany.webapp.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mycompany.webapp.dao.UsersDao;
+import com.mycompany.webapp.dto.Pager;
 import com.mycompany.webapp.dto.User;
 
 @Service
@@ -39,87 +41,65 @@ public class UsersService {
 		
 		usersDao.userInsert(user);
 	}
-	/// 아이디가 존재하는지 아닌지 여부를 확인하기 위한 절차
-	public String duplicateId(String userid) {
-		User dbUser=usersDao.selectbyUserid(userid);
-		
-		 if(dbUser != null) {
-			 return "wrongUid";
-		 }		 
-		 return "success";
-	}
 
 	
-	public String duplicateEmail(String useremail) {
-		User dbUser = usersDao.selectbyUemail(useremail);
-		logger.info(useremail);
-		if(dbUser != null) {
-			return "existemail";
+	public void disabled(String userid) {
+		int result = usersDao.userStatusDisalbed(userid);
+		
+	}
+	
+	public void activate(String userid) {
+		int result = usersDao.userStatusActivation(userid);
+		
+	}
+	public int getCount() {
+		return usersDao.getcount();
+	}
+	
+	public int getSearchuserCount(String search) {
+		return usersDao.getsearchusercount(search);
+	}
+	public int getSearchnameCount(String search) {
+		return usersDao.getsearchnamecount(search);
+	}
+	public int getSearchemailCount(String search) {
+		return usersDao.getsearchemailcount(search);
+	}
+	
+	public List<User> userList(Pager pager, int number){
+		switch(number) {
+		//case에 따라 아이디, 이름, 가입날짜, 이메일 순으로 정렬된 데이터를 가져온다
+		case 1 : return usersDao.userList(pager);
+		case 2 : return usersDao.nameList(pager);
+		case 3 : return usersDao.dateList(pager);
+		case 4 : return usersDao.emailList(pager);
+		default: return usersDao.userList(pager); 
 		}
 		
-		return "success";
 	}
 	
-	public String finduser(String uemail, String uname) {
+	public List<User> searchList(Pager pager, int number){
 		
-		User dbUser = usersDao.selectbyemailandname(uemail,uname);
-		if(dbUser != null) {
+		switch(number) {
+		//case에 따라 아이디, 이름, 가입날짜, 이메일 순으로 검색된 데이터를 가져온다
+		case 1 : return usersDao.userSearch(pager);
+		case 2 : return usersDao.nameSearch(pager);
+		case 3 : return usersDao.emailSearch(pager);
+		default: return usersDao.userSearch(pager); 
+		}
 		
-			return dbUser.getUserid();
-		}else {
-			
-			return "fail";
-		}
 	}
 	
-	public String finduser(String uemail, String uname, String userid ) {
-		User dbUser = usersDao.duplicateMaNald(uemail, uname, userid);
-		if(dbUser == null) {
-			return "fail";
-		}else {
-			return "success";
-		}
-	}
-	
-	public User finduser(String userid) {
-		User dbUser = usersDao.selectbyUserid(userid);
-		if(dbUser == null) {
-			logger.info("null");
-			return null;
-		}else {
-			logger.info("dbuser");
-			return dbUser;
-		}
-	}
-	
-	public int updateuser(String userid, String userpassword) {
+	public void update (String userid) {
+		//logger.info("password : " + user.getUpassword());
 		BCryptPasswordEncoder bpe = new BCryptPasswordEncoder();
-		
-		int result = usersDao.userpwUpdate(userid, bpe.encode(userpassword));
-		
-		return result;
-	}
-	
-	public String updateInfo(User user) {
-		int result = usersDao.userUpdate(user);
-		logger.info(String.valueOf(result));
-		if(result == 1) {
-			return "success";
-		}else {
-			return "fail";
-		}
-	}
-	
-	public String deleteuser(String userid) {
-		int result = usersDao.userStatusUpdate(userid);
-		if(result == 1) {
-			return "success";
-		}else {
-			return "fail";
-		}
-		
+		String password = userid + "team5";
+		password = bpe.encode(password);
+		usersDao.userpwUpdate(userid, password);
 	}
 
+
+	  
 	
 	
 

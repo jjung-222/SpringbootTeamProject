@@ -80,6 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
            .dataSource(dataSource)
            .usersByUsernameQuery("select userid, upassword, uenabled from users where userid=?")
            .authoritiesByUsernameQuery("select userid, uauthority from users where userid=? and uauthority='ROLE_ADMIN'")
+
            .passwordEncoder(new BCryptPasswordEncoder());
    }
    

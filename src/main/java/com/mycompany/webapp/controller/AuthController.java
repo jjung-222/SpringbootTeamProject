@@ -195,4 +195,7 @@ public class AuthController {
 		   logger.info("userid : " + userid);
 		   usersService.update(userid);
 	   }
+
 }
+
+

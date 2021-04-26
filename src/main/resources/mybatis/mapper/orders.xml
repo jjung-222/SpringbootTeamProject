@@ -18,13 +18,11 @@
 	            from (
 	              	select orderno, userid, oaddress, oreceiver, omessage, omethod, odate, ostatus, ozipcode, onumber
 					from orders
-					<if test="keyword == ''"><!-- 검색이 없을경우 -->						
-					</if>
-					<if test="keyword != '' and searchType=='userid'">
+					<if test="keyword != null and searchType=='userid'">
 						where userid like '%' || #{keyword} || '%'
 					</if>
 					
-					<if test="keyword != '' and searchType=='orderno'">
+					<if test="keyword != null and searchType=='orderno'">
 						where orderno like #{keyword}
 					</if>
 	               order by odate desc
@@ -56,13 +54,11 @@
 	
 	<select id="count" parameterType="map" resultType="int">
 		select count(*) from orders
-		<if test="keyword == ''"><!-- 검색이 없을경우 -->
-		</if>
-		<if test="keyword != '' and searchType=='userid'">
+		<if test="keyword != null and searchType=='userid'">
 			where userid like '%' || #{keyword} || '%'
 		</if>
 		
-		<if test="keyword != '' and searchType=='orderno'">
+		<if test="keyword != null and searchType=='orderno'">
 			where orderno like #{keyword}
 		</if>		
 	

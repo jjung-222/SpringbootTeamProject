@@ -15,17 +15,15 @@
 						select p.productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount
 						from  productreviews pr, products p
 						where pr.productno = p.productno
-						<if test="keyword == ''"><!-- 검색이 없을경우 -->
-						</if>
-						<if test="keyword != '' and searchType=='userid'">
+						<if test="keyword != null and searchType=='userid'">
 							and userid like '%' || #{keyword} || '%'
 						</if>
 						
-						<if test="keyword != '' and searchType=='productname'">
+						<if test="keyword != null and searchType=='productname'">
 							and p.pname like '%' || #{keyword} || '%'
 						</if>
 						
-						<if test="keyword != '' and searchType=='titlecontent'">
+						<if test="keyword != null and searchType=='titlecontent'">
 							and (btitle like '%' || #{keyword} || '%' or bcontent like '%' || #{keyword} || '%')
 						</if>
 						order by boardno desc
@@ -45,17 +43,16 @@
 	select count(*) 
 	from productreviews, products
  	where productreviews.productno = products.productno
-	<if test="keyword == ''"><!-- 검색이 없을경우 -->
-	</if>
-	<if test="keyword != '' and searchType=='userid'">
+
+	<if test="keyword != null and searchType=='userid'">
 		and userid like '%' || #{keyword} || '%'
 	</if>
 	
-	<if test="keyword != '' and searchType=='productname'">
+	<if test="keyword != null and searchType=='productname'">
 		and products.pname like '%' || #{keyword} || '%'
 	</if>
 	
-	<if test="keyword != '' and searchType=='titlecontent'">
+	<if test="keyword != null and searchType=='titlecontent'">
 		and (btitle like '%' || #{keyword} || '%' or bcontent like '%' || #{keyword} || '%')
 	</if>
 </select>

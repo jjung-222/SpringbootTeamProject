@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,16 +23,18 @@ import com.mycompany.webapp.service.OrdersService;
 @RequestMapping("/orders")
 public class OrderController {
 	
+	private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+	
 	@Autowired
 	private OrdersService ordersService;
 	
 	@GetMapping("")
 	public Map<String, Object> list(@RequestParam(defaultValue = "1") int pageNo,
-									@RequestParam(defaultValue = "") String searchType,
-									@RequestParam(defaultValue = "") String keyword) {
+									String searchType, String keyword) {
 
 		int totalRows = ordersService.getTotalRows(searchType, keyword);
 		Pager pager = new Pager(10, 5, totalRows, pageNo);
+		logger.info(searchType + " " + keyword + " total" + totalRows);
 		List<Order> orderList = ordersService.getOrderList(pager,searchType, keyword);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("pager", pager);

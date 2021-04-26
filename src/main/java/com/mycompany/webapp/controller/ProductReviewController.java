@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,15 +22,16 @@ import com.mycompany.webapp.service.ProductReviewsService;
 @RestController
 @RequestMapping("/productReview")
 public class ProductReviewController {
+	private static final Logger logger = LoggerFactory.getLogger(ProductReviewController.class);
 	
 	@Autowired
 	private ProductReviewsService productReviewsService;
 	
 	@GetMapping("")
 	public Map<String, Object> list(@RequestParam(defaultValue = "1") int pageNo,
-			@RequestParam(defaultValue = "") String searchType,
-			@RequestParam(defaultValue = "") String keyword) {
+			String searchType, String keyword) {
 			int totalRows = productReviewsService.getTotalRows(searchType, keyword);
+			logger.info(searchType + " " + keyword + " total" + totalRows);
 			Pager pager = new Pager(5, 5, totalRows, pageNo);
 			List<ProductReviews> productReviewList = productReviewsService.getProductReviews(pager,searchType, keyword);
 			Map<String, Object> map = new HashMap<String, Object>();

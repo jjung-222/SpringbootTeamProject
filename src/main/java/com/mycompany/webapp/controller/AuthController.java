@@ -196,6 +196,21 @@ public class AuthController {
 		   usersService.update(userid);
 	   }
 
+	   @PostMapping("/join")
+	   public String join(@RequestBody User user) {
+	      logger.info(user.getUname());
+	      logger.info(user.getUauthority());
+	      //회원가입 처리
+	      String idresult = usersService.duplicateId(user.getUserid());
+	      if(idresult.equals("success")) {            
+	      usersService.join(user);
+	      return "success";
+	      } else {
+	         return "fail";
+	      }
+	      
+	      
+	   }
 }
 
 

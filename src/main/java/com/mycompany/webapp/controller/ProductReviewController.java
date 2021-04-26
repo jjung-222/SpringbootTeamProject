@@ -67,8 +67,8 @@ public class ProductReviewController {
          if(battachoname == null) return;
          battachoname = new String(battachoname.getBytes("UTF-8"),"ISO-8859-1");
          String battachsname = review.getBsaveimg();      
-//	         String battachspath = "D:/Study/Users/MyProjects/uploadfiles/" + battachsname;
-         String battachspath = "F:/uploadfiles/" + battachsname;
+	     String battachspath = "C:/MyProjects/uploadfiles/" + battachsname;
+//         String battachspath = "F:/uploadfiles/" + battachsname;
          String battachtype = review.getBimgtype();
          
          response.setHeader("Content-Disposition", "attachment; filename=\""+battachoname+"\";");

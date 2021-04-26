@@ -3,13 +3,21 @@
 <mapper namespace="com.mycompany.webapp.dao.UsersDao">
 
 	
-  	
+  	<select id="adminlist" resultType="user">
+  		select *
+  		from users
+  		where uauthority='ROLE_ADMIN'
+  	</select>
   	<select id="getcount" resultType="int">
   		select count(*)
   		from users
   	</select>
   	
-  	
+  	<select id="getusercount" resultType="int">
+  		select count(*)
+  		from users 
+  		where uenabled=1
+  	</select>
   	
   	<select id="userList" resultType="user" parameterType="pager" >
   		 select rnum, userid,uname,uemail,ujoindate,uenabled

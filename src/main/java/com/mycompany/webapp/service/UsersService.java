@@ -60,6 +60,10 @@ public class UsersService {
 		return usersDao.getcount();
 	}
 	
+	public int getUserCount() {
+		return usersDao.getusercount();
+	}
+	
 	public int getSearchuserCount(String search) {
 		return usersDao.getsearchusercount(search);
 	}
@@ -109,6 +113,11 @@ public class UsersService {
 			 return "wrongUid";
 		 }		 
 		 return "success";
+	}
+	
+	public List<User> adminlist() {
+		List<User> user = usersDao.adminlist();
+		return user;
 	}
 
 	  

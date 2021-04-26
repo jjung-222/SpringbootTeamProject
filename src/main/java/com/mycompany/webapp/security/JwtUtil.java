@@ -74,23 +74,23 @@ public class JwtUtil {
    }
    
    //테스트
-//   public static void main(String[] args) {
-//      //토큰 생성
-//      String jwt = createToken("user1");
-//      logger.info(jwt);
-//      
-//      //지연
-//      try {
-//         Thread.sleep(5000);
-//      } catch (InterruptedException e) {
-//         e.printStackTrace();
-//      }
-//      
-//      //토큰 정보 얻기
-//      if(validateToken(jwt)) {
-//         String uid = getUid(jwt);
-//         logger.info(uid);   
-//      }      
-//      
-//   }
+   public static void main(String[] args) {
+      //토큰 생성
+      String jwt = createToken("user1");
+      logger.info(jwt);
+      
+      //지연
+      try {
+         Thread.sleep(5000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+      
+      //토큰 정보 얻기
+      if(validateToken(jwt)) {
+         String uid = getUid(jwt);
+         logger.info(uid);   
+      }      
+      
+   }
 }

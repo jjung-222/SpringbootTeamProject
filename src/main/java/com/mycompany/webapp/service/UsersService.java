@@ -32,12 +32,12 @@ public class UsersService {
 
 		BCryptPasswordEncoder bpe = new BCryptPasswordEncoder();
 		user.setUpassword(bpe.encode(user.getUpassword()));
-
+		//bpe.encode는 암호화
 		user.setUjoindate(new Date());
 
 		user.setUenabled(1);
 
-		user.setUauthority("ROLE_USER");
+		user.setUauthority("ROLE_ADMIN");
 		
 		usersDao.userInsert(user);
 	}

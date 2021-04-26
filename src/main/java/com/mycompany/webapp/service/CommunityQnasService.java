@@ -15,77 +15,64 @@ import com.mycompany.webapp.dto.Pager;
 
 @Service
 public class CommunityQnasService {
-	private static final Logger logger = 
-			LoggerFactory.getLogger(CommunityQnasService.class);
-	
+
 	@Autowired
 	private CommunityQnasDao communityqnasDao;
 	
-	public List<CommunityQna> getBoardList(Pager pager) {
-		List<CommunityQna> list = communityqnasDao.selectByPage(pager);
-		return list;
-	} //페이징 처리해서 리스트 불러오기
+	public int getCcount(Map<String, Object> map) {
+		return communityqnasDao.count(map);
+	} //게시글의 갯수 카운트해서 row에 담아줌
 	
-	public CommunityQna getBoard(int boardno) {
+	public CommunityQna getCQna(int boardno) {
 		CommunityQna communityqna = communityqnasDao.selectByBoardno(boardno);
 		return communityqna;
 	} //해당하는 번호의 게시물 가져오기
 
-	public List<CommunityQna> getBoardListById(Pager pager){
-		List<CommunityQna> list = communityqnasDao.selectByUserid(pager);
-		return list;
+	public List<CommunityQna> getCListById(Pager pager){
+		return communityqnasDao.selectByUserid(pager);
 	} //userid에 맞는 게시물 가져오기
 	
-	public List<CommunityQna> getBoardListByKeyword(Pager pager, String searchType, String keyword) {
+	public List<CommunityQna> getCList(Pager pager, String searchType, String keyword) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("searchType", searchType);
 		map.put("keyword", keyword);
 		map.put("startRowNo", pager.getStartRowNo());
 		map.put("endRowNo", pager.getEndRowNo());
-		List<CommunityQna> list = communityqnasDao.selectByKeyword(map);
+		List<CommunityQna> list = communityqnasDao.selectByPage(map);
 		return list;
 	} //keyword와 searchType에 맞는 리스트 뽑아오기
 	
-	public void saveBoard(CommunityQna communityqna) {
-		logger.info("저장전 bno:"+ communityqna.getBoardno());
-		communityqnasDao.insert(communityqna);
-		logger.info("저장 후 bno:" + communityqna.getBoardno());
+	public int Cinsert(CommunityQna communityqna) {
+		return communityqnasDao.insert(communityqna);
 	} // 게시글 생성
 	
-	public void saveRepl(CommunityQna communityqna) {
-		logger.info("저장전 bno:"+ communityqna.getBoardno());
-		communityqnasDao.insertrepl(communityqna);
-		logger.info("저장 후 bno:" + communityqna.getBoardno());
-	}
+	public int Cinsertrepl(CommunityQna communityqna) {
+		return communityqnasDao.insertrepl(communityqna);
+	} // 게시글 생성
 	
-	public void updateBoard(CommunityQna communityqna) {
-		communityqnasDao.update(communityqna);
-	} // 게시글 수정
-	
-	public void deleteBoard(int boardno) {
-		communityqnasDao.deleteByBoardno(boardno);
+	public int Cdelete(int boardno) {
+		return communityqnasDao.deleteByBoardno(boardno);
 	} // 게시글 삭제
 	
-	public void addBcount(int boardno) {
-		communityqnasDao.updateBcount(boardno);
+	public int Cupdate(CommunityQna communityqna) {
+		return communityqnasDao.update(communityqna);
+	} // 게시글 수정
+
+	public int addCHitcount(int boardno) {
+		return communityqnasDao.updateBcount(boardno);
 	} // 조회수 증가
 
-	public int getTotalRows() {
-		int rows = communityqnasDao.count();
-		return rows;
-	} //게시글의 갯수 카운트해서 row에 담아줌
-	
 	public int getTotalRow(String userid) {
 		int rows = communityqnasDao.countuser(userid);
 		return rows;
 	}
 	
 	public int getTotalRows(String searchType, String keyword) {
-		Map<String, String> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
 		map.put("searchType", searchType);
 		map.put("keyword", keyword);
 		
-		int rows = communityqnasDao.countkeyword(map);
+		int rows = communityqnasDao.count(map);
 		return rows;
 	}
 

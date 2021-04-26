@@ -41,6 +41,10 @@ public class UsersService {
 		
 		usersDao.userInsert(user);
 	}
+	
+	public User getuser(String userid) {
+		return usersDao.selectbyUserid(userid);
+	}
 
 	
 	public void disabled(String userid) {

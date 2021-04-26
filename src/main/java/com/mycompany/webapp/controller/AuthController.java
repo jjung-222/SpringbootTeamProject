@@ -1,6 +1,7 @@
 package com.mycompany.webapp.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -10,12 +11,19 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mycompany.webapp.dto.Pager;
+import com.mycompany.webapp.dto.User;
 import com.mycompany.webapp.security.JwtUtil;
+import com.mycompany.webapp.service.UsersService;
 
 @RestController
 @RequestMapping("/auth")
@@ -25,27 +33,166 @@ public class AuthController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
-	@PostMapping("/login")
-	// json이 {"uid":"user1", "upassword":"12345"} 이런식으로 넘어 왔을때
-	public Map<String, String> login(@RequestBody Map<String, String> user) { //데이터 넘기는 세가지 방법 xww form json-requestbody로 받아야함
-		//인증 데이터 얻기
-		String uid = user.get("uid");
-		String upassword = user.get("upassword");
+	@Autowired
+	private UsersService usersService;
+	
+	
+		//// 회원리스트 - userid로 정렬
+		@GetMapping("/userList")
+	   public Map<String,Object> list(@RequestParam(defaultValue="1") int pageNo) {
 		
-		//사용자 인증
-		UsernamePasswordAuthenticationToken upat = new UsernamePasswordAuthenticationToken(uid, upassword);
-		Authentication authentication = authenticationManager.authenticate(upat); //인증이 성공하면 authentiaction을 리턴
-		//세션에 저장
+	      int totalRows = usersService.getCount();
+	      if(totalRows == 0) {
+	    	  totalRows = 1;
+	      }
+	      Pager pager = new Pager(5, 5, totalRows, pageNo);
+	      List<User> list = usersService.userList(pager,1);
+	      Map<String,Object> map = new HashMap<>();
+	      map.put("pager", pager);
+	      map.put("userlist", list);
+	      return map;
+	   }
+	//// 회원리스트 - 가입날짜로 정렬
+		@GetMapping("joindate")
+		 public Map<String,Object> joindatelist(@RequestParam(defaultValue="1") int pageNo) {
+		      int totalRows = usersService.getCount();
+		      if(totalRows == 0) {
+		    	  totalRows = 1;
+		      }
+		      Pager pager = new Pager(5, 5, totalRows, pageNo);
+		      List<User> list = usersService.userList(pager,3);
+		      Map<String,Object> map = new HashMap<>();
+		      map.put("pager", pager);
+		      map.put("userlist", list);
+		      return map;
+		   }
+	//// 회원리스트 - 이메일로 정렬
+		@GetMapping("email")
+		 public Map<String,Object> emaillist(@RequestParam(defaultValue="1") int pageNo) {
+		      int totalRows = usersService.getCount();
+		      if(totalRows == 0) {
+		    	  totalRows = 1;
+		      }
+		      Pager pager = new Pager(5, 5, totalRows, pageNo);
+		      List<User> list = usersService.userList(pager,4);
+		      Map<String,Object> map = new HashMap<>();
+		      map.put("pager", pager);
+		      map.put("userlist", list);
+		      return map;
+		   }
 		
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+		//// 회원리스트 - 이름으로 정렬
+		@GetMapping("name")
+		 public Map<String,Object> namelist(@RequestParam(defaultValue="1") int pageNo) {
+		      int totalRows = usersService.getCount();
+		      if(totalRows == 0) {
+		    	  totalRows = 1;
+		      }
+		      Pager pager = new Pager(5, 5, totalRows, pageNo);
+		      List<User> list = usersService.userList(pager,2);
+		      Map<String,Object> map = new HashMap<>();
+		      map.put("pager", pager);
+		      map.put("userlist", list);
+		      return map;
+		   }
 		
-		//jwt 생성
-		String jwt = JwtUtil.createToken(uid);
+		//-------------------아래 내용은 검색어를 통해 검색된 검색어 리스트이다
+		// user 검색어
+		@GetMapping("searchuser")
+		 public Map<String,Object> searchuser(@RequestParam(defaultValue="1") int pageNo, String search) {
+			
+		      logger.info("searchuser : " + search);
+		      int totalRows = usersService.getSearchuserCount(search);
+		     
+		      if(totalRows == 0) {
+		    	  totalRows = 1;
+		      }
+		      logger.info("serarchuser : " + totalRows);
+		      Pager pager = new Pager(5, 5, totalRows, pageNo);
+		      pager.setKeyword(search);
+		      List<User> list = usersService.searchList(pager,1);
+		      logger.info("pager : " + pager.getKeyword());
+		      Map<String,Object> map = new HashMap<>();
+		      map.put("pager", pager);
+		      map.put("userlist", list);
+		      logger.info("serarchuser : " + list.get(0).getUname());
+		      return map;
+		   }
 		
-		Map<String, String> map = new HashMap<>();
-		map.put("uid", uid);
-		map.put("authToken", jwt);
+		// 이름 검색어
+		@GetMapping("searchname")
+		 public Map<String,Object> searchname(@RequestParam(defaultValue="1") int pageNo, String search ) {
+			logger.info("searchname : " + search);
+			  Map<String,Object> map = new HashMap<>();
+		      int totalRows = usersService.getSearchnameCount(search);
+		      if(totalRows == 0) {
+		    	  totalRows = 1;
+		      }
+		      Pager pager = new Pager(5, 5, totalRows, pageNo);
+		      pager.setKeyword(search);
+		      List<User> list = usersService.searchList(pager,2);
+		      map.put("pager", pager);
+		      map.put("userlist", list);
+		      return map;
+		  
+		   }
+		@GetMapping("searchemail")
+		 public Map<String,Object> searchemail(@RequestParam(defaultValue="1") int pageNo,String search) {
+			logger.info("searchemail : " + search);
+		      int totalRows = usersService.getSearchemailCount(search);
+		      if(totalRows == 0) {
+		    	  totalRows = 1;
+		      }
+		      Pager pager = new Pager(5, 5, totalRows, pageNo);
+		      pager.setKeyword(search);
+		      List<User> list = usersService.searchList(pager,3);
+		      Map<String,Object> map = new HashMap<>();
+		      map.put("pager", pager);
+		      map.put("userlist", list);
+		      return map;
+		   }
 		
-		return map;
-		}
+		// 로그인
+		@PostMapping("/login")
+		// json이 {"uid":"user1", "upassword":"12345"} 이런식으로 넘어 왔을때
+		public Map<String, String> login(@RequestBody Map<String, String> user) { //데이터 넘기는 세가지 방법 xww form json-requestbody로 받아야함
+			//인증 데이터 얻기
+			String uid = user.get("userid");
+			String upassword = user.get("upassword");
+			//사용자 인증
+			UsernamePasswordAuthenticationToken upat = new UsernamePasswordAuthenticationToken(uid, upassword);
+			Authentication authentication = authenticationManager.authenticate(upat); //인증이 성공하면 authentiaction을 리턴
+			//세션에 저장
+			
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			
+			//jwt 생성
+			String jwt = JwtUtil.createToken(uid);
+			
+			Map<String, String> map = new HashMap<>();
+			map.put("uid", uid);
+			map.put("authToken", jwt);
+			
+			return map;
+			}
+		
+		
+	
+		
+		/// 회원 비활성화 -> 활성화
+	   @PutMapping("activate/{userid}")
+	   public void activate(@PathVariable String userid) {
+		   usersService.activate(userid);
+	   }
+	   // 회원 활성화 -> 비활성화
+	   @PutMapping("disabled/{userid}")
+	   public void disabled(@PathVariable String userid) {
+		   usersService.disabled(userid);
+	   }
+	   // 회원 비밀번호 초기화
+	   @PutMapping("update/{userid}")
+	   public void update(@PathVariable String userid) {
+		   logger.info("userid : " + userid);
+		   usersService.update(userid);
+	   }
 }

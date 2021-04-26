@@ -220,6 +220,7 @@ public class AuthController {
 	      }
 	      
 	      return map;
+
 	   }
 	   
 	   @GetMapping("/count")
@@ -232,6 +233,7 @@ public class AuthController {
 	   public List<User> getlist() {
 		   List<User> user=usersService.adminlist();
 		   return user;
+
 	   }
 }
 

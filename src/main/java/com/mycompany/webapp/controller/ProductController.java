@@ -58,7 +58,7 @@ public class ProductController{
    public Map<String, Object> mainlist() {
       int totalRows = productService.getCount();
       List<Product> best = productService.pSelectBest();      
-      List<Product> newitem = productService.pSelectBest();      
+      List<Product> newitem = productService.pSelectDate();      
       Map<String, Object> map = new HashMap<>();
       map.put("totalRows", totalRows);
       map.put("best", best);

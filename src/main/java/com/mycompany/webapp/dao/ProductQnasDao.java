@@ -3,20 +3,33 @@ package com.mycompany.webapp.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.mycompany.webapp.dto.Pager;
 import com.mycompany.webapp.dto.ProductQnas;
 
 @Mapper
 public interface ProductQnasDao {
-	public List<ProductQnas> SelectByProductno(Pager pager); //게시판 목록 전체
-	public ProductQnas selectByBoardno(int boardno); //번호에 해당하는 board를 가져옴
-	public List<ProductQnas> selectByUserid(Pager pager);
-	public int pqnaInsert(ProductQnas productqnas); //게시판 입력
-	public int pqnaUpdate(ProductQnas productqnas); //게시판 업데이트
-	public int pqnaDelete(int boardno); //게시판 삭제
-	public int pqnacount(int productno);
-	public int pqnacountuser(String userid);
-	public int pupdateBcount(int boardno);
+	
+	public List<ProductQnas>pqnabnoList(Pager pager);
+	public List<ProductQnas>pqnabtitleList(Pager pager);
+	public List<ProductQnas>pqnauserList(Pager pager);
+	public List<ProductQnas>pqnadateList(Pager pager);
+	public List<ProductQnas>pqnapnameList(Pager pager);
+	public int getList();
+	public int getPnameKeywordList(@Param("keyword") String keyword);
+	public int getTitleKeywordList(@Param("keyword") String keyword);
+	public int getUserKeywordList(@Param("keyword") String keyword);
+	public List<ProductQnas> pqnaPnameList(Pager pager);
+	public List<ProductQnas> pqnaTitleList(Pager pager);
+	public List<ProductQnas> pqnaUserList(Pager pager);
+	public ProductQnas getBoardPage(@Param("boardno") int boardno);
+	public int getReviewCount(@Param("boardno") int boardno);
+	public List<ProductQnas> getReviewList(Pager pager);
+	public void deleteBoardList(@Param("boardno") int boardno);
+	public int insert(ProductQnas pqnas);
+	public ProductQnas readReview(@Param("boardno") int boardno);
+	public void updateReview(ProductQnas readreview);
+	public void deleteReview(@Param("boardno") int boardno);
 	
 }

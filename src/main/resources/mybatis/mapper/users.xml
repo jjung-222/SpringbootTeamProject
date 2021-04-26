@@ -4,7 +4,124 @@
 
 	
   	
-  
+  	<select id="getcount" resultType="int">
+  		select count(*)
+  		from users
+  	</select>
+  	
+  	
+  	
+  	<select id="userList" resultType="user" parameterType="pager" >
+  		 select rnum, userid,uname,uemail,ujoindate,uenabled
+      from (
+          select rownum as rnum, userid,uname,uemail,ujoindate,uenabled
+          from (
+             select userid,uname,uemail,ujoindate,uenabled
+             from users
+             order by userid asc
+          )
+          where rownum &lt;= #{endRowNo}
+      ) 
+      where rnum &gt;= #{startRowNo}
+  	</select>
+  	 <select id="nameList" resultType="user" parameterType="pager" >
+  		 select rnum, userid,uname,uemail,ujoindate,uenabled
+      from (
+          select rownum as rnum, userid,uname,uemail,ujoindate,uenabled
+          from (
+             select userid,uname,uemail,ujoindate,uenabled
+             from users
+             order by uname asc
+          )
+          where rownum &lt;= #{endRowNo}
+      ) 
+      where rnum &gt;= #{startRowNo}
+  	</select>
+  	<select id="dateList" resultType="user" parameterType="pager" >
+  		 select rnum, userid,uname,uemail,ujoindate,uenabled
+      from (
+          select rownum as rnum, userid,uname,uemail,ujoindate,uenabled
+          from (
+             select userid,uname,uemail,ujoindate,uenabled
+             from users
+             order by ujoindate asc
+          )
+          where rownum &lt;= #{endRowNo}
+      ) 
+      where rnum &gt;= #{startRowNo}
+  	</select>
+  	<select id="emailList" resultType="user" parameterType="pager" >
+  		 select rnum, userid,uname,uemail,ujoindate,uenabled
+      from (
+          select rownum as rnum, userid,uname,uemail,ujoindate,uenabled
+          from (
+             select userid,uname,uemail,ujoindate,uenabled
+             from users
+             order by uemail asc
+          )
+          where rownum &lt;= #{endRowNo}
+      ) 
+      where rnum &gt;= #{startRowNo}
+  	</select>
+  	
+  	<select id="getsearchusercount" resultType="int">
+  		select count(*)
+  		from users
+  		 where userid like '%'||#{search}||'%'
+  	</select>
+  	<select id="getsearchnamecount" resultType="int">
+  		select count(*)
+  		from users
+  		 where uname like '%'||#{search}||'%'
+  	</select>
+  	<select id="getsearchemailcount" resultType="int">
+  		select count(*)
+  		from users
+  		 where uemail like '%'||#{search}||'%'
+  	</select>
+  	<select id="userSearch" resultType="user"  parameterType="pager">
+  		 select rnum, userid,uname,uemail,ujoindate,uenabled
+	      from (
+	          select rownum as rnum, userid,uname,uemail,ujoindate,uenabled
+	          from (
+	             select userid,uname,uemail,ujoindate,uenabled
+	             from users
+	             where userid like '%'||#{keyword}||'%'
+	             order by userid asc
+	          )
+	          where rownum &lt;= #{endRowNo}
+	      ) 
+	      where rnum &gt;= #{startRowNo}
+  	</select>
+  	 <select id="nameSearch" resultType="user" parameterType="pager">
+  		 select rnum, userid,uname,uemail,ujoindate,uenabled
+	      from (
+	          select rownum as rnum, userid,uname,uemail,ujoindate,uenabled
+	          from (
+	             select userid,uname,uemail,ujoindate,uenabled
+	             from users
+	             where uname like '%'||#{keyword}||'%'
+	             order by uname asc
+	          )
+	          where rownum &lt;= #{endRowNo}
+	      ) 
+	      where rnum &gt;= #{startRowNo}
+  	</select>
+
+  	<select id="emailSearch" resultType="user" parameterType="pager" >
+  		 select rnum, userid,uname,uemail,ujoindate,uenabled
+	      from (
+	          select rownum as rnum, userid,uname,uemail,ujoindate,uenabled
+	          from (
+	             select userid,uname,uemail,ujoindate,uenabled
+	             from users
+	             where uemail like '%'||#{keyword}||'%'
+	             order by uemail asc
+	          )
+	          where rownum &lt;= #{endRowNo}
+	      ) 
+	      where rnum &gt;= #{startRowNo}
+  	</select>
   	
 	<!-- 愿�由ъ�� ���μ���� ������ 議고������ -->
 	<select id="selectAll" resultType="user">
@@ -25,30 +142,30 @@
   	    where UEMAIL = #{uemail} 
   	</select>
   	
-  	<select id="selectbyemailandname" parameterType="string" resultType="user"> 
-  		select USERID
-  	    from users
-  	    where UEMAIL = #{uemail} and UNAME = #{uname}
-  	</select>
-
-	<select id="duplicateMaNald" parameterType="string" resultType="user"> 
-  		select USERID
-  	    from users
-  	    where UEMAIL = #{uemail} and UNAME = #{uname} and USERID=#{userid}
-  	</select>
+ 
 	<!-- ����媛��� (���� 異�媛�) -->
 	<insert id="userInsert" parameterType="user">
+		<selectKey keyProperty="productno" resultType="int" order="BEFORE"> 
+			   		select seq_productno.nextval from dual
+		</selectKey>
 		insert into users 
-		(userid, upassword, uname, uzipcode, uaddress, uemail, utel, ubirth, uenabled, ujoindate, uauthority)
+		(boardno,userid, upassword, uname, uzipcode, uaddress, uemail, utel, ubirth, uenabled, ujoindate, uauthority)
 		values
-		(#{userid},#{upassword},#{uname},#{uzipcode},#{uaddress},#{uemail},#{utel},#{ubirth},#{uenabled},#{ujoindate},#{uauthority})
+		(#{boardno},#{userid},#{upassword},#{uname},#{uzipcode},#{uaddress},#{uemail},#{utel},#{ubirth},#{uenabled},#{ujoindate},#{uauthority})
 	</insert>
 	<!-- �������댄������ uexit ���곗�댄�� -->
-	<update id="userStatusUpdate" parameterType="string">
+	<update id="userStatusDisalbed" parameterType="string">
 		update users set
 		UENABLED=0
 		where USERID=#{userid}
 	</update>
+	
+	<update id="userStatusActivation" parameterType="string">
+		update users set
+		UENABLED=1
+		where USERID=#{userid}
+	</update>
+	
 	
 	<update id="userpwUpdate" parameterType="string">
 		update users set
@@ -56,14 +173,6 @@
 		where USERID=#{userid}
 	</update>
 	
-	<!-- ������蹂� ���� ���� �� -->
-	<update id="userUpdate" parameterType="user" >
-			update users set
-			UZIPCODE=${uzipcode},
-			UADDRESS=#{uaddress},
-			UTEL=#{utel}
-			where USERID=#{userid}
 
-	</update>
 
 </mapper>

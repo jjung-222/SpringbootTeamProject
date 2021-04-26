@@ -13,44 +13,73 @@ import com.mycompany.webapp.dto.ProductQnas;
 @Service
 public class ProductQnasService {
 	@Autowired ProductQnasDao productQnasDao;
-	public List<ProductQnas> SelectByProductno(Pager pager){
-		List<ProductQnas> list = productQnasDao.SelectByProductno(pager);
-		return list;
+	
+	public List<ProductQnas> pqnaList(Pager pager, int number){
+		switch(number) {
+		case 1 : return productQnasDao.pqnabnoList(pager);
+		case 2 : return productQnasDao.pqnapnameList(pager);
+		case 3 : return productQnasDao.pqnabtitleList(pager);
+		case 4 : return productQnasDao.pqnauserList(pager);
+		case 5 : return productQnasDao.pqnadateList(pager);
+		default : return productQnasDao.pqnabnoList(pager);
+		}
 	}
 	
-	public List<ProductQnas> getBoardListById(Pager pager){
-		List<ProductQnas> list = productQnasDao.selectByUserid(pager);
-		return list;
-	} //userid에 맞는 게시물 가져오기
-	
-	public void pqnaInsert(ProductQnas productqna) {
-		productQnasDao.pqnaInsert(productqna);
+	public List<ProductQnas> pqnaSearchList(Pager pager, int number){
+		switch(number) {
+		case 1 : return productQnasDao.pqnaPnameList(pager);
+		case 2 : return productQnasDao.pqnaTitleList(pager);
+		case 3 : return productQnasDao.pqnaUserList(pager);
+		default : return productQnasDao.pqnaPnameList(pager);
+		}
 	}
 	
-	public void pqnaUpdate(ProductQnas productqna) {
-		productQnasDao.pqnaUpdate(productqna);
+	public int getCount() {
+		return productQnasDao.getList();
+	}
+	public int getPnameCount(String keyword) {
+		return productQnasDao.getPnameKeywordList(keyword);
+	}
+	public int getTitleCount(String keyword) {
+		return productQnasDao.getTitleKeywordList(keyword);
+	}
+	public int getUserCount(String keyword) {
+		return productQnasDao.getUserKeywordList(keyword);
+	}
+
+	public ProductQnas readBoard(int boardno) {
+		return productQnasDao.getBoardPage(boardno);
+	}
+
+	public int getReviewCount(int boardno) {
+		return productQnasDao.getReviewCount(boardno);
+	}
+
+	public List<ProductQnas> getReviewList(Pager pager,int boardno) {
+		pager.setBoardno(boardno);
+		return productQnasDao.getReviewList(pager);
+	}
+
+	public void deleteBoardList(int boardno) {
+		productQnasDao.deleteBoardList(boardno);
+	}
+
+	public void insert(ProductQnas pqnas) {
+		productQnasDao.insert(pqnas);
+	}
+
+	public ProductQnas readReview(int boardno) {
+		return productQnasDao.readReview(boardno);
+		
+	}
+
+	public void updateReview(ProductQnas readreview) {
+		productQnasDao.updateReview(readreview);
+	}
+
+	public void deleteReview(int boardno) {
+		productQnasDao.deleteReview(boardno);
+		
 	}
 	
-	public void pqnaDelete(int boardno) {
-		productQnasDao.pqnaDelete(boardno);
-	}
-	
-	public int getTotalRows(int productno) {
-		int rows = productQnasDao.pqnacount(productno);
-		return rows;
-	} 
-	
-	public int getTotalRow(String userid) {
-		int rows = productQnasDao.pqnacountuser(userid);
-		return rows;
-	} 
-	
-	public void paddBcount(int boardno) {
-		productQnasDao.pupdateBcount(boardno);
-	} // 조회수 증가
-	
-	public ProductQnas getBoard(int boardno) {
-		ProductQnas productqna = productQnasDao.selectByBoardno(boardno);
-		return productqna;
-	} //해당하는 번호의 게시물 가져오기
 }

@@ -17,9 +17,20 @@ public class Pager {
 	private int endRowNo;		//페이지의 마지막 행 번호
 	private int endRowIndex;	//페이지의 마지막 행 인덱스
 	private int pcategory;
+	private int boardno;
 	private String userid;
 	private String keyword;
 	
+	
+	
+	public int getBoardno() {
+		return boardno;
+	}
+
+	public void setBoardno(int boardno) {
+		this.boardno = boardno;
+	}
+
 	public String getKeyword() {
 		return keyword;
 	}

@@ -42,5 +42,14 @@ public class ProductService {
 	public void pUpdateEnable(int productno) {
 		productDao.pUpdateEnable(productno);
 	}
-		
+	
+	public List<Product> pSelectBest(){
+		List<Product> list = productDao.pSelectBest();
+		return list;
+	}
+	
+	public List<Product> pSelectDate(){
+		List<Product> list = productDao.pSelectDate();
+		return list;
+	}
 }

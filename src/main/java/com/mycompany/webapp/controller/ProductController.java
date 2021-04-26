@@ -52,7 +52,19 @@ public class ProductController{
       map.put("products", list);
       map.put("pager", pager);
       return map;
-   }   
+   }
+   
+   @GetMapping("/mainlist")
+   public Map<String, Object> mainlist() {
+      int totalRows = productService.getCount();
+      List<Product> best = productService.pSelectBest();      
+      List<Product> newitem = productService.pSelectBest();      
+      Map<String, Object> map = new HashMap<>();
+      map.put("totalRows", totalRows);
+      map.put("best", best);
+      map.put("newitem", newitem);      
+      return map;
+   }
    
    @PostMapping("")
    public void create(Product product) {

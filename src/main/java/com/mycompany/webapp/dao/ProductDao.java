@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.mycompany.webapp.dto.Pager;
 import com.mycompany.webapp.dto.Product;
+import com.mycompany.webapp.dto.Products;
 import com.mycompany.webapp.dto.Product;
 
 @Mapper
@@ -17,4 +18,6 @@ public interface ProductDao {
 	public Product pSelectByPno(int productno); //상품인덱스번호 찾기
 	public int pDeleteByPno(int productno); //상품 삭제
 	public int pUpdateEnable(int productno);
+	public List<Product> pSelectBest(); //베스트7 조회
+	public List<Product> pSelectDate(); //신상품7 조회
 }

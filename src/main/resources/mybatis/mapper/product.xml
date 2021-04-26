@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycompany.webapp.dao.ProductDao">
+<select id="pSelectByPage" parameterType="pager" resultType="product">
+select rnum, productno, pcategory, pname, pprice, pregisterdate, psalescount, pstock, penable, detailimgoname, detailimgsname, detailimgtype, imgno, ioriginalname, isavename, imgtype, ipriority
+from(
+    select rownum as rnum, productno, pcategory, pname, pprice, pregisterdate, psalescount, pstock, penable, detailimgoname, detailimgsname, detailimgtype, imgno, ioriginalname, isavename, imgtype, ipriority
+        from (
+          select p.productno, p.pcategory, p.pname, p.pprice, p.pregisterdate, p.psalescount, p.pstock, p.penable, p.detailimgoname, p.detailimgsname, p.detailimgtype, i.imgno, i.ioriginalname, i.isavename, i.imgtype, i.ipriority
+          from products p, productimgs i
+          where p.productno=i.productno and i.ipriority=1
+
+				order by productno desc
+			)
+		where rownum &lt;=#{endRowNo}
+	)
+	where rnum &gt;= #{startRowNo}
+</select>
+
+<insert id="pInsert" parameterType="product">
+	<selectKey keyProperty="productno" resultType="int" order="BEFORE"> 
+		   		select seq_productno.nextval from dual
+	</selectKey>
+	insert into products
+	(productno, pcategory, pname, pprice, pregisterdate, psalescount, pstock, penable, detailimgoname, detailimgsname, detailimgtype)
+	values
+	(seq_productno.currval, #{pcategory}, #{pname}, #{pprice}, sysdate, #{psalescount}, #{pstock}, #{penable}, #{detailimgoname}, #{detailimgsname}, #{detailimgtype})
+</insert>
+
+<update id="pUpdate" parameterType="product">
+	<if test="detailimgoname == null">
+		update products set
+			pname=#{pname},
+			pcategory=#{pcategory}, 
+			pprice=#{pprice}, 
+			psalescount=#{psalescount}, 
+			pstock=#{pstock}, 
+			penable=#{penable}
+		where productno=#{productno}
+	</if>
+     <if test="detailimgoname != null">
+     	update products set
+			pname=#{pname},
+			pcategory=#{pcategory}, 
+			pprice=#{pprice}, 
+			psalescount=#{psalescount}, 
+			pstock=#{pstock}, 
+			penable=#{penable},
+			detailimgoname=#{detailimgoname}, 
+			detailimgsname=#{detailimgsname}, 
+			detailimgtype=#{detailimgtype}
+		where productno=#{productno}
+     </if>
+</update>
+
+<select id="pSelectByPno" parameterType="int" resultType="product">
+	select p.productno, p.pcategory, p.pname, p.pprice, p.pregisterdate, p.psalescount, p.pstock, p.penable, p.detailimgoname, p.detailimgsname, p.detailimgtype, i.imgno, i.ioriginalname, i.isavename, i.imgtype, i.ipriority
+	from products p, productimgs i
+  where p.productno=#{productno} and i.productno=#{productno} and i.ipriority=1
+	order by p.productno desc
+</select>
+
+<delete id="pDeleteByPno" parameterType="int">
+	delete from products wehre productno=#{productno}
+</delete>
+
+
+<update id="pUpdateEnable" parameterType="int">
+	update products set
+		penable=0
+	where productno=#{productno}
+</update>
+
+<select id="count" resultType="int">
+	select count(*) from products
+</select>
+</mapper>

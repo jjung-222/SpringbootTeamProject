@@ -16,6 +16,8 @@
          
          <typeAlias type="com.mycompany.webapp.dto.Products" alias="products"/>
          
+         <typeAlias type="com.mycompany.webapp.dto.Product" alias="product"/>         
+         
          <typeAlias type="com.mycompany.webapp.dto.ProductImgs" alias="productimgs"/>
          
          <typeAlias type="com.mycompany.webapp.dto.ProductQnas" alias="productqna"/>

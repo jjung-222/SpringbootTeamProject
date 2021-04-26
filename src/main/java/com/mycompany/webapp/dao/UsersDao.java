@@ -32,6 +32,8 @@ public interface UsersDao {
 	public int userStatusActivation(String Uid);
 	
 	public int getcount();
+	public int getusercount();
+	public List<User> adminlist();
 	public int getsearchusercount(@Param("search")String search);
 	public int getsearchnamecount(@Param("search")String search);
 	public int getsearchemailcount(@Param("search")String search);

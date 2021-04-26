@@ -221,6 +221,18 @@ public class AuthController {
 	      
 	      return map;
 	   }
+	   
+	   @GetMapping("/count")
+	   public int userCount() {
+		  int usercount = usersService.getUserCount();
+		   return usercount;
+	   }
+	   
+	   @GetMapping("/list")
+	   public List<User> getlist() {
+		   List<User> user=usersService.adminlist();
+		   return user;
+	   }
 }
 
 

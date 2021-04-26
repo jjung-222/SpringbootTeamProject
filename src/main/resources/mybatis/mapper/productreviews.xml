@@ -33,6 +33,23 @@
 	where rnum &gt;= #{startRowNo}
 </select>
 
+<select id="selectByBest" resultType="productreviews">
+ select rnum, productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount	
+		from(	
+			select rownum as rnum, productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount						
+			from ( 
+						select p.productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount
+						from  productreviews pr, products p
+						where pr.productno = p.productno
+						order by bcount desc
+					 )
+				where rownum &lt;=7
+			)
+	where rnum &gt;= 1
+</select>
+
+
+
 <select id="selectByBno" parameterType="int" resultType="productreviews">
 	select boardno, pname, userid, products.productno, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount
 	from productreviews, products

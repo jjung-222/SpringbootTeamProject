@@ -84,5 +84,13 @@ public class ProductReviewController {
          e.printStackTrace();
       }
    }
+   
+   @GetMapping("/bsetReview")
+   public List<ProductReviews> bestList() {
+	   
+	   List<ProductReviews> list = productReviewsService.getBestReview();
+	   
+	   return list;
+   }
 	
 }

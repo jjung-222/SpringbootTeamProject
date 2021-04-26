@@ -97,7 +97,15 @@ public class UsersService {
 		password = bpe.encode(password);
 		usersDao.userpwUpdate(userid, password);
 	}
-
+	
+	public String duplicateId(String userid) {
+		User dbUser=usersDao.selectbyUserid(userid);
+		
+		 if(dbUser != null) {
+			 return "wrongUid";
+		 }		 
+		 return "success";
+	}
 
 	  
 	

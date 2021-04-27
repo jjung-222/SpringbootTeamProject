@@ -59,11 +59,9 @@ public class ProductReviewController {
 	
    @GetMapping("/battach/{boardno}")
    public void download(@PathVariable int boardno, HttpServletResponse response) {
-	   logger.info(boardno+"");
       try {
     	 ProductReviews review = productReviewsService.getReview(boardno);
          String battachoname = review.getBorgimg();
-         logger.info(battachoname);
          if(battachoname == null) return;
          battachoname = new String(battachoname.getBytes("UTF-8"),"ISO-8859-1");
          String battachsname = review.getBsaveimg();      
@@ -96,7 +94,6 @@ public class ProductReviewController {
    @GetMapping("/reviewTotalRows")
    public int reviewTotalRows() {
 	   int totalRows = productReviewsService.getTotalRows(null, null);
-	   logger.info(""+totalRows);
 	   return totalRows;
    }
 	

@@ -13,7 +13,7 @@
 			)
 			where rownum &lt;=#{endRowNo}
 		)
-	where rnum &gt;= #{startRowNo}
+		where rnum &gt;= #{startRowNo}
 	</select>
 	
 	<select id="selectByBoardno" parameterType="int" resultType="notice">

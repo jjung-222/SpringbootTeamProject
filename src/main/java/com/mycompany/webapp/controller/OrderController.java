@@ -33,7 +33,7 @@ public class OrderController {
 									String searchType, String keyword) {
 
 		int totalRows = ordersService.getTotalRows(searchType, keyword);
-		Pager pager = new Pager(10, 5, totalRows, pageNo);
+		Pager pager = new Pager(5, 5, totalRows, pageNo);
 		List<Order> orderList = ordersService.getOrderList(pager,searchType, keyword);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("pager", pager);

@@ -15,10 +15,11 @@ import com.mycompany.webapp.dto.ProductReviews;
 public class ProductReviewsService {
 	@Autowired ProductReviewsDao productReviewsDao;
 	
-	public List<ProductReviews> getProductReviews(Pager pager, String searchType, String keyword){
+	public List<ProductReviews> getProductReviews(Pager pager, String searchType, String keyword, String sort){
 		Map<String, Object> map = new HashMap<>();
 		map.put("searchType", searchType);
 		map.put("keyword", keyword);
+		map.put("sort", sort);
 		map.put("endRowNo", pager.getEndRowNo());
 		map.put("startRowNo", pager.getStartRowNo());
 		

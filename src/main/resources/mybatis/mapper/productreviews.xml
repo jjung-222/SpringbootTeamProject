@@ -26,7 +26,31 @@
 						<if test="keyword != null and searchType=='titlecontent'">
 							and (btitle like '%' || #{keyword} || '%' or bcontent like '%' || #{keyword} || '%')
 						</if>
-						order by boardno desc
+						
+						<if test="sort == 'boardno'">
+							order by boardno desc
+						</if>
+						
+						<if test="sort == 'pname'">
+							order by pname asc
+						</if>
+						
+						<if test="sort == 'btitle'">
+							order by btitle asc
+						</if>
+						
+						<if test="sort == 'userid'">
+							order by userid asc
+						</if>
+						
+						<if test="sort == 'bdate'">
+							order by bdate desc
+						</if>
+						
+						<if test="sort == 'bcount'">
+							order by bcount desc
+						</if>	
+						 
 					 )
 				where rownum &lt;=#{endRowNo}
 			)
@@ -73,11 +97,6 @@
 		and (btitle like '%' || #{keyword} || '%' or bcontent like '%' || #{keyword} || '%')
 	</if>
 </select>
-
-<update id="updateHitCount" parameterType="int">
-   update productreviews set bcount=bcount+1 where boardno=#{boardno}
-</update>
-
 
 <delete id="deleteReview" parameterType="int">
 	delete from productreviews where boardno=#{boardno}

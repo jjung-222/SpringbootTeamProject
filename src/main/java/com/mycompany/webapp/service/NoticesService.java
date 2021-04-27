@@ -44,6 +44,13 @@ public class NoticesService {
 	public int addHitcount(int boardno) {
 		return noticesDao.updateBcount(boardno);
 	}
+	
+	public List<Notice> noticeList(Pager pager) {
+		
+		// noticesDao.selectByPage(pager);//1. 컨트롤러에서 받아서 서비스로 전달
+		List<Notice> list = noticesDao.selectByPage(pager);
+		return list;
+	}
 
 	
 }

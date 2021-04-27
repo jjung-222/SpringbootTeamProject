@@ -66,4 +66,21 @@ public class NoticeController {
 		noticesService.delete(boardno);
 	}
 	
+	@GetMapping("/list")
+	public Map<String, Object> getList(@RequestParam(defaultValue="1") int pageNo) {
+		//뭘보내야할까 데이터를 보내야해 페이지넘을 보내야해 
+		int totalRows = noticesService.getCount(); 
+		Pager pager = new Pager(5, 5, totalRows, pageNo);
+		
+		List<Notice> list = noticesService.noticeList(pager); //리스트를 가져옴
+		
+		//클라이언트에 전달할 값, 리스트와 페이저
+		Map<String, Object> map = new HashMap<> ();
+		map.put("notice", list);
+		map.put("pager", pager);
+		
+		return map;
+	
+	}
+	
 }

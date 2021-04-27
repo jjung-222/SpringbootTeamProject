@@ -16,5 +16,7 @@ public interface NoticesDao {
 	public int deleteByBoardno(int boardno);
 	public int update(Notice notice);
 	public int updateBcount(int boardno);
+	
+	//public List<Notice> selectByPage(Pager pager); //최종적으로 무슨데이터를 가지고 올지 생각!!
 
 }

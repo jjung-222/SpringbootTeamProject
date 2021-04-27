@@ -157,14 +157,16 @@ public class AuthController {
 		// json이 {"uid":"user1", "upassword":"12345"} 이런식으로 넘어 왔을때
 		public Map<String, String> login(@RequestBody Map<String, String> user) { //데이터 넘기는 세가지 방법 xww form json-requestbody로 받아야함
 			//인증 데이터 얻기
-			String uid = user.get("userid");
+			String uid = user.get("userid"); //홈페이지 입력값 받아온것
 			String upassword = user.get("upassword");
 			
 			//User useremail = new User(); //받아오기 위해 껍데기를 만들어줌
 			//useremail = usersService.getuser(uid); //껍데기에 내용을 채워넣어줌
 			//String email =useremail.getUemail(); //그 내용에서 이메일만 가져옴
-			
-			String email = usersService.getuser(uid).getUemail();
+			User user1 = usersService.getuser(uid);
+		
+			String email = user1.getUemail();
+			String uname = user1.getUname();
 			
 			//사용자 인증
 			UsernamePasswordAuthenticationToken upat = new UsernamePasswordAuthenticationToken(uid, upassword);
@@ -180,9 +182,10 @@ public class AuthController {
 			map.put("uid", uid);
 			map.put("authToken", jwt);
 			map.put("email", email);
+			map.put("uname", uname);
 			
 			return map;
-			}
+		}
 		
 		
 	

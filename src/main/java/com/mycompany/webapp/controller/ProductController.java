@@ -54,6 +54,50 @@ public class ProductController{
       return map;
    }
    
+   @GetMapping("/list1")
+   public Map<String, Object> list1(@RequestParam(defaultValue="1") int pageNo) {
+      int totalRows = productService.getCategoryCount(1);
+      Pager pager = new Pager(5, 5, totalRows, pageNo, 1);
+      List<Product> list = productService.pCategoryByPage(pager);
+      Map<String, Object> map = new HashMap<>();
+      map.put("products1", list);
+      map.put("pager1", pager);
+      return map;
+   }
+   
+   @GetMapping("/list2")
+   public Map<String, Object> list2(@RequestParam(defaultValue="1") int pageNo) {
+      int totalRows = productService.getCategoryCount(2);
+      Pager pager = new Pager(5, 5, totalRows, pageNo, 2);
+      List<Product> list = productService.pCategoryByPage(pager);
+      Map<String, Object> map = new HashMap<>();
+      map.put("products2", list);
+      map.put("pager2", pager);
+      return map;
+   }
+   
+   @GetMapping("/list3")
+   public Map<String, Object> list3(@RequestParam(defaultValue="1") int pageNo) {
+      int totalRows = productService.getCategoryCount(3);
+      Pager pager = new Pager(5, 5, totalRows, pageNo, 3);
+      List<Product> list = productService.pCategoryByPage(pager);
+      Map<String, Object> map = new HashMap<>();
+      map.put("products3", list);
+      map.put("pager3", pager);
+      return map;
+   }
+   
+   @GetMapping("/list4")
+   public Map<String, Object> list4(@RequestParam(defaultValue="1") int pageNo) {
+      int totalRows = productService.getCategoryCount(4);
+      Pager pager = new Pager(5, 5, totalRows, pageNo, 4);
+      List<Product> list = productService.pCategoryByPage(pager);
+      Map<String, Object> map = new HashMap<>();
+      map.put("products4", list);
+      map.put("pager4", pager);
+      return map;
+   }
+    
    @GetMapping("/mainlist")
    public Map<String, Object> mainlist() {
       int totalRows = productService.getCount();

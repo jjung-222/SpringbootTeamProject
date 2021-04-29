@@ -9,12 +9,26 @@ from(
           select p.productno, p.pcategory, p.pname, p.pprice, p.pregisterdate, p.psalescount, p.pstock, p.penable, p.detailimgoname, p.detailimgsname, p.detailimgtype, i.imgno, i.ioriginalname, i.isavename, i.imgtype, i.ipriority
           from products p, productimgs i
           where p.productno=i.productno and i.ipriority=1
-
-				order by productno desc
+		  order by productno desc
 			)
 		where rownum &lt;=#{endRowNo}
 	)
-	where rnum &gt;= #{startRowNo}
+	where rnum &gt;=#{startRowNo}
+</select>
+
+<select id="pCategoryByPage" parameterType="pager" resultType="product">
+select rnum, productno, pcategory, pname, pprice, pregisterdate, psalescount, pstock, penable, detailimgoname, detailimgsname, detailimgtype, imgno, ioriginalname, isavename, imgtype, ipriority
+from(
+    select rownum as rnum, productno, pcategory, pname, pprice, pregisterdate, psalescount, pstock, penable, detailimgoname, detailimgsname, detailimgtype, imgno, ioriginalname, isavename, imgtype, ipriority
+        from (
+          select p.productno, p.pcategory, p.pname, p.pprice, p.pregisterdate, p.psalescount, p.pstock, p.penable, p.detailimgoname, p.detailimgsname, p.detailimgtype, i.imgno, i.ioriginalname, i.isavename, i.imgtype, i.ipriority
+          from products p, productimgs i
+          where p.productno=i.productno and i.ipriority=1 and p.pcategory=#{pcategory}
+	      order by productno desc
+			)
+		where rownum &lt;=#{endRowNo}
+	)
+	where rnum &gt;=#{startRowNo}
 </select>
 
 <insert id="pInsert" parameterType="product">
@@ -71,8 +85,12 @@ from(
 	where productno=#{productno}
 </update>
 
-<select id="count" resultType="int">
+<select id="countAll" resultType="int">
 	select count(*) from products
+</select>
+
+<select id="count" parameterType="int" resultType="int">
+	select count(*) from products where pcategory=#{pcategory}
 </select>
 
 <select id="pSelectBest" resultType="product">
@@ -85,7 +103,7 @@ from(
  )
  where rownum &lt;= 7
 </select>
-
+ 
 <select id="pSelectDate" resultType="product">
 select productno, pcategory, pname, pprice, pregisterdate, psalescount, pstock, penable, detailimgoname, detailimgsname, detailimgtype, imgno, ioriginalname, isavename, imgtype, ipriority
 from(

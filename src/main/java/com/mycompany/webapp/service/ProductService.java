@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import com.mycompany.webapp.dao.ProductDao;
 import com.mycompany.webapp.dto.Pager;
 import com.mycompany.webapp.dto.Product;
-import com.mycompany.webapp.dto.Products;
-import com.mycompany.webapp.dto.Product;
 
 @Service
 public class ProductService {
@@ -18,12 +16,20 @@ public class ProductService {
 	public List<Product> pSelectByPage(Pager pager){
 		return productDao.pSelectByPage(pager);		
 	}
+	public List<Product> pCategoryByPage(Pager pager){
+		return productDao.pCategoryByPage(pager);		
+	}
+	
 	public void pInsert(Product product) {
 		productDao.pInsert(product);
 	};
 	
    public int getCount() {
-	   return productDao.count();
+	   return productDao.countAll();
+   }
+   
+   public int getCategoryCount(int category) {
+	   return productDao.count(category);
    }
 	
 	public void pUpdate(Product product) {

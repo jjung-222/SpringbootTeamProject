@@ -1,139 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mycompany.webapp.dao.ProductReviewsDao">
-<select id="prSelectAll" resultType="productreviews">
-	select boardno, userid, productno, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount
-	from productreviews
-	order by boardno desc
-</select>
-
-<select id="selectByPage" parameterType="map" resultType="productreviews">
- select rnum, productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount	
-		from(	
-			select rownum as rnum, productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount						
-			from ( 
-						select p.productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount
-						from  productreviews pr, products p
-						where pr.productno = p.productno
-						<if test="keyword != null and searchType=='userid'">
-							and userid like '%' || #{keyword} || '%'
-						</if>
-						
-						<if test="keyword != null and searchType=='productname'">
-							and p.pname like '%' || #{keyword} || '%'
-						</if>
-						
-						<if test="keyword != null and searchType=='titlecontent'">
-							and (btitle like '%' || #{keyword} || '%' or bcontent like '%' || #{keyword} || '%')
-						</if>
-						
-						<if test="sort == 'boardno'">
-							order by boardno desc
-						</if>
-						
-						<if test="sort == 'pname'">
-							order by pname asc
-						</if>
-						
-						<if test="sort == 'btitle'">
-							order by btitle asc
-						</if>
-						
-						<if test="sort == 'userid'">
-							order by userid asc
-						</if>
-						
-						<if test="sort == 'bdate'">
-							order by bdate desc
-						</if>
-						
-						<if test="sort == 'bcount'">
+	<select id="prSelectAll" resultType="productreviews">
+		select boardno, userid, productno, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount
+		from productreviews
+		order by boardno desc
+	</select>
+	
+	<select id="selectByPage" parameterType="map" resultType="productreviews">
+	 select rnum, productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount	
+			from(	
+				select rownum as rnum, productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount						
+				from ( 
+							select p.productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount
+							from  productreviews pr, products p
+							where pr.productno = p.productno
+							<if test="keyword != null and searchType=='userid'">
+								and userid like '%' || #{keyword} || '%'
+							</if>
+							
+							<if test="keyword != null and searchType=='productname'">
+								and p.pname like '%' || #{keyword} || '%'
+							</if>
+							
+							<if test="keyword != null and searchType=='titlecontent'">
+								and (btitle like '%' || #{keyword} || '%' or bcontent like '%' || #{keyword} || '%')
+							</if>
+							
+							<if test="sort == 'boardno'">
+								order by boardno desc
+							</if>
+							
+							<if test="sort == 'pname'">
+								order by pname asc
+							</if>
+							
+							<if test="sort == 'btitle'">
+								order by btitle asc
+							</if>
+							
+							<if test="sort == 'userid'">
+								order by userid asc
+							</if>
+							
+							<if test="sort == 'bdate'">
+								order by bdate desc
+							</if>
+							
+							<if test="sort == 'bcount'">
+								order by bcount desc
+							</if>	
+							 
+						 )
+					where rownum &lt;=#{endRowNo}
+				)
+		where rnum &gt;= #{startRowNo}
+	</select>
+	
+	<select id="selectByBest" resultType="productreviews">
+	 select rnum, productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount	
+			from(	
+				select rownum as rnum, productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount						
+				from ( 
+							select p.productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount
+							from  productreviews pr, products p
+							where pr.productno = p.productno
 							order by bcount desc
-						</if>	
-						 
-					 )
-				where rownum &lt;=#{endRowNo}
-			)
-	where rnum &gt;= #{startRowNo}
-</select>
-
-<select id="selectByBest" resultType="productreviews">
- select rnum, productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount	
-		from(	
-			select rownum as rnum, productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount						
-			from ( 
-						select p.productno, pname, boardno, userid, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount
-						from  productreviews pr, products p
-						where pr.productno = p.productno
-						order by bcount desc
-					 )
-				where rownum &lt;=7
-			)
-	where rnum &gt;= 1
-</select>
-
-
-
-<select id="selectByBno" parameterType="int" resultType="productreviews">
-	select boardno, pname, userid, products.productno, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount
-	from productreviews, products
-	where productreviews.productno = products.productno and boardno=#{boardno}
-</select>
-
-<select id="count" parameterType="map" resultType="int">	
-	select count(*) 
-	from productreviews, products
- 	where productreviews.productno = products.productno
-
-	<if test="keyword != null and searchType=='userid'">
-		and userid like '%' || #{keyword} || '%'
-	</if>
+						 )
+					where rownum &lt;=7
+				)
+		where rnum &gt;= 1
+	</select>
 	
-	<if test="keyword != null and searchType=='productname'">
-		and products.pname like '%' || #{keyword} || '%'
-	</if>
 	
-	<if test="keyword != null and searchType=='titlecontent'">
-		and (btitle like '%' || #{keyword} || '%' or bcontent like '%' || #{keyword} || '%')
-	</if>
-</select>
-
-<delete id="deleteReview" parameterType="int">
-	delete from productreviews where boardno=#{boardno}
-</delete>
-
-<update id="prUpdate" parameterType="productreviews">	
-    update productreviews set
- 		btitle=#{btitle}, 
-		bcontent=#{bcontent} 
-		where boardno=#{boardno}
-</update>
-
-
-<insert id="prInsert" parameterType="productreviews">
-  <selectKey keyProperty="boardno" resultType="int" order="BEFORE"> 
- 		select seq_preview_boardno.nextval from dual
- </selectKey>	
- <if test="borgimg == null">
-	insert into productreviews
-	(boardno, userid, productno, btitle, bcontent, bdate, bcount)
-	values
-	(seq_preview_boardno.nextval, #{userid}, #{productno}, #{btitle}, #{bcontent}, sysdate, 0)
-	</if>
-  <if test="borgimg != null">
- 	insert into productreviews
-	(boardno, userid, productno, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount)
-	values
-	(seq_preview_boardno.nextval, #{userid}, #{productno}, #{btitle}, #{bcontent}, sysdate, #{borgimg}, #{bsaveimg}, #{bimgtype}, 0)  
-  </if>
-</insert>
-  	
-
 	
-<select id="prUser" parameterType="int" resultType="productreviews">
-	select distinct o.userid
-	from orders o, orderproducts op
-	where o.orderno=op.orderno and op.productno=#{productno} and o.ostatus='배송완료'
-</select>	
+	<select id="selectByBno" parameterType="int" resultType="productreviews">
+		select boardno, pname, userid, products.productno, btitle, bcontent, bdate, borgimg, bsaveimg, bimgtype, bcount
+		from productreviews, products
+		where productreviews.productno = products.productno and boardno=#{boardno}
+	</select>
+	
+	<select id="count" parameterType="map" resultType="int">	
+		select count(*) 
+		from productreviews, products
+	 	where productreviews.productno = products.productno
+	
+		<if test="keyword != null and searchType=='userid'">
+			and userid like '%' || #{keyword} || '%'
+		</if>
+		
+		<if test="keyword != null and searchType=='productname'">
+			and products.pname like '%' || #{keyword} || '%'
+		</if>
+		
+		<if test="keyword != null and searchType=='titlecontent'">
+			and (btitle like '%' || #{keyword} || '%' or bcontent like '%' || #{keyword} || '%')
+		</if>
+	</select>
+	
+	<delete id="deleteReview" parameterType="int">
+		delete from productreviews where boardno=#{boardno}
+	</delete>
+
 
 </mapper>

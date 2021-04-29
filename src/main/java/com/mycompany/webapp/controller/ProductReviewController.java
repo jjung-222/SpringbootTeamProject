@@ -35,16 +35,16 @@ public class ProductReviewController {
 	
 	@GetMapping("")
 	public Map<String, Object> list(@RequestParam(defaultValue = "1") int pageNo,
-			String searchType, String keyword, String sort) {
-		
-			logger.info(sort);
-			int totalRows = productReviewsService.getTotalRows(searchType, keyword);
-			Pager pager = new Pager(5, 5, totalRows, pageNo);
-			List<ProductReviews> productReviewList = productReviewsService.getProductReviews(pager, searchType, keyword, sort);
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("pager", pager);
-			map.put("reviews", productReviewList);
-			return map;
+		String searchType, String keyword, String sort) {
+	
+		logger.info(sort);
+		int totalRows = productReviewsService.getTotalRows(searchType, keyword);
+		Pager pager = new Pager(5, 5, totalRows, pageNo);
+		List<ProductReviews> productReviewList = productReviewsService.getProductReviews(pager, searchType, keyword, sort);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pager", pager);
+		map.put("reviews", productReviewList);
+		return map;
 	}
 	
 	
